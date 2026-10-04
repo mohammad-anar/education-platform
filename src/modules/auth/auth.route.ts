@@ -1,55 +1,77 @@
 import express from "express";
-import auth from "../../middleware/auth.middleware.js";
-import fileUploadHandler from "../../middleware/fileUpload.middleware.js";
 import validateRequest from "../../middleware/validate.middleware.js";
-import { AuthController } from "./auth.controller.js";
+import auth from "../../middleware/auth.middleware.js";
+import { authLimiter } from "../../middleware/rateLimiter.js";
+import { AuthControllers } from "./auth.controller.js";
 import { AuthValidation } from "./auth.validation.js";
 
 const router = express.Router();
 
 router.post(
   "/register",
-  fileUploadHandler(),
+  authLimiter,
   validateRequest(AuthValidation.registerZodSchema),
-  AuthController.registerUser,
+  AuthControllers.registerUser,
 );
 
 router.post(
   "/login",
+  authLimiter,
   validateRequest(AuthValidation.loginZodSchema),
-  AuthController.loginUser,
+  AuthControllers.loginUser,
 );
 
 router.post(
   "/refresh-token",
   validateRequest(AuthValidation.refreshTokenZodSchema),
-  AuthController.refreshToken,
+  AuthControllers.refreshToken,
+);
+
+router.post(
+  "/logout",
+  auth(),
+  AuthControllers.logoutUser,
+);
+
+router.post(
+  "/send-otp",
+  authLimiter,
+  validateRequest(AuthValidation.sendOtpZodSchema),
+  AuthControllers.sendOtp,
+);
+
+router.post(
+  "/verify-otp",
+  validateRequest(AuthValidation.verifyOtpZodSchema),
+  AuthControllers.verifyOtp,
 );
 
 router.post(
   "/change-password",
   auth(),
   validateRequest(AuthValidation.changePasswordZodSchema),
-  AuthController.changePassword,
+  AuthControllers.changePassword,
 );
 
 router.post(
   "/forgot-password",
+  authLimiter,
   validateRequest(AuthValidation.forgotPasswordZodSchema),
-  AuthController.forgotPassword,
+  AuthControllers.forgotPassword,
 );
 
 router.post(
   "/reset-password",
+  authLimiter,
   validateRequest(AuthValidation.resetPasswordZodSchema),
-  AuthController.resetPassword,
+  AuthControllers.resetPassword,
 );
 
 router.get(
   "/me",
   auth(),
-  AuthController.getMe,
+  AuthControllers.getMe,
 );
 
 export const AuthRoutes = router;
-export default router;
+export default AuthRoutes;

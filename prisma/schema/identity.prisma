@@ -1,0 +1,154 @@
+// ==========================================
+// IDENTITY, AUTHENTICATION & RBAC DOMAIN
+// ==========================================
+
+model User {
+  id               String      @id @default(uuid()) @db.Uuid
+
+  email            String?     @unique
+  phone            String?     @unique
+
+  passwordHash     String?
+
+  firstName        String
+  middleName       String?
+  lastName         String?
+
+  displayName      String?
+
+  avatarUrl        String?
+
+  status           UserStatus  @default(INVITED)
+
+  emailVerifiedAt  DateTime?
+  phoneVerifiedAt  DateTime?
+
+  lastLoginAt      DateTime?
+  lastActiveAt     DateTime?
+
+  twoFactorEnabled Boolean     @default(false)
+
+  metadata         Json?
+
+  createdAt        DateTime    @default(now())
+  updatedAt        DateTime    @updatedAt
+  deletedAt        DateTime?
+
+  // Relations
+  memberships      InstituteMembership[]
+  roles            UserRole[]
+
+  // Polymorphic profile linkages (1 User -> 1 optional profile per persona)
+  student          Student?
+  teacher          TeacherProfile?
+  guardian         Guardian?
+  staff            StaffProfile?
+
+  // Result Override & Approval tracking
+  overriddenResults          StudentResult[]   @relation("ResultOverriddenByUser")
+  approvedResults            StudentResult[]   @relation("ResultApprovedByUser")
+  overriddenResultComponents ResultComponent[] @relation("ComponentOverriddenByUser")
+
+  // Attendance Creator, Taker & Audit Tracking
+  createdAttendanceCalendars AttendanceCalendar[] @relation("CalendarCreatedByUser")
+  takenAttendanceSessions    AttendanceSession[]  @relation("AttendanceTakenByUser")
+  markedAttendanceRecords    AttendanceRecord[]   @relation("AttendanceMarkedByUser")
+  modifiedAttendanceRecords  AttendanceRecord[]   @relation("AttendanceModifiedByUser")
+  // LMS & Course Restriction Tracking
+  createdAccessOverrides     LearningItemAccessOverride[] @relation("AccessOverrideCreatedByUser")
+  createdCourseRestrictions  CourseAccessRestriction[]    @relation("CourseRestrictionCreatedByUser")
+  revokedCourseRestrictions  CourseAccessRestriction[]    @relation("CourseRestrictionRevokedByUser")
+
+  // System Activity
+  notifications    Notification[]
+  auditLogs        AuditLog[]
+
+  @@map("users")
+  @@index([status])
+  @@index([email])
+  @@index([phone])
+}
+
+model Role {
+  id          String   @id @default(uuid()) @db.Uuid
+
+  instituteId String?  @db.Uuid
+
+  name        String
+  code        String
+  description String?
+
+  isSystem    Boolean  @default(false)
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  institute   Institute? @relation(fields: [instituteId], references: [id], onDelete: Cascade)
+
+  permissions RolePermission[]
+  users       UserRole[]
+
+  @@unique([instituteId, code])
+  @@map("roles")
+  @@index([instituteId])
+}
+
+model Permission {
+  id          String   @id @default(uuid()) @db.Uuid
+
+  resource    String
+  action      String
+
+  description String?
+
+  createdAt   DateTime @default(now())
+
+  roles       RolePermission[]
+
+  @@unique([resource, action])
+  @@map("permissions")
+}
+
+model RolePermission {
+  roleId       String     @db.Uuid
+  permissionId String     @db.Uuid
+
+  role         Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  permission   Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+
+  @@id([roleId, permissionId])
+  @@map("role_permissions")
+}
+
+model UserRole {
+  userId String @db.Uuid
+  roleId String @db.Uuid
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role   Role   @relation(fields: [roleId], references: [id], onDelete: Cascade)
+
+  @@id([userId, roleId])
+  @@map("user_roles")
+}
+
+model InstituteMembership {
+  id          String           @id @default(uuid()) @db.Uuid
+
+  instituteId String           @db.Uuid
+  userId      String           @db.Uuid
+
+  status      MembershipStatus @default(ACTIVE)
+
+  joinedAt    DateTime         @default(now())
+  leftAt      DateTime?
+
+  metadata    Json?
+
+  institute   Institute        @relation(fields: [instituteId], references: [id], onDelete: Cascade)
+  user        User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([instituteId, userId])
+  @@map("institute_memberships")
+  @@index([userId])
+  @@index([instituteId, status])
+}

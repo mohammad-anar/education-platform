@@ -1,45 +1,95 @@
-import bcrypt from "bcryptjs";
 import env from "../config/env.js";
 import prisma from "../config/prisma.js";
-import { UserRole, UserStatus } from "@prisma/client";
+import { UserStatus } from "@prisma/client";
+import cryptoHelper from "./crypto.js";
+import logger from "./logger.js";
 
 export const seedSuperAdmin = async () => {
   if (!env.admin.email || !env.admin.password) {
     return;
   }
 
-  console.log("Checking for Admin with email:", env.admin.email);
-
   const isExist = await prisma.user.findFirst({
     where: {
       email: env.admin.email,
-      role: UserRole.ADMIN,
+    },
+    include: {
+      roles: {
+        include: {
+          role: true,
+        },
+      },
     },
   });
 
-  if (!isExist) {
-    const hashedPassword = await bcrypt.hash(
-      env.admin.password,
-      env.bcrypt_salt_round || 10,
-    );
+  // Ensure SUPER_ADMIN and system roles exist
+  let superAdminRole = await prisma.role.findFirst({
+    where: { code: "SUPER_ADMIN", instituteId: null },
+  });
 
-    await prisma.user.create({
+  if (!superAdminRole) {
+    superAdminRole = await prisma.role.create({
       data: {
-        firstName: env.admin.name || "Super",
+        name: "Super Administrator",
+        code: "SUPER_ADMIN",
+        description: "Global system administrator with full access",
+        isSystem: true,
+      },
+    });
+  }
+
+  // Ensure default roles exist
+  const defaultRoles = [
+    { name: "Institute Admin", code: "ADMIN", desc: "Institute Administrator" },
+    { name: "Teacher", code: "TEACHER", desc: "Faculty / Instructor" },
+    { name: "Student", code: "STUDENT", desc: "Enrolled Student" },
+    { name: "Staff", code: "STAFF", desc: "General Staff" },
+    { name: "Guardian", code: "GUARDIAN", desc: "Parent / Guardian" },
+  ];
+
+  for (const r of defaultRoles) {
+    const roleExists = await prisma.role.findFirst({
+      where: { code: r.code, instituteId: null },
+    });
+    if (!roleExists) {
+      await prisma.role.create({
+        data: {
+          name: r.name,
+          code: r.code,
+          description: r.desc,
+          isSystem: true,
+        },
+      });
+    }
+  }
+
+  if (!isExist) {
+    const hashedPassword = await cryptoHelper.hashPassword(env.admin.password);
+
+    const newUser = await prisma.user.create({
+      data: {
+        firstName: env.admin.name || "Super Admin",
         lastName: "Admin",
         email: env.admin.email,
-        phone: env.admin.phone,
+        phone: env.admin.phone || null,
         passwordHash: hashedPassword,
-        profileImage: env.admin.avatar,
-        role: UserRole.ADMIN,
-        isVerified: true,
-        needPasswordChange: false,
+        avatarUrl: env.admin.avatar || null,
+        emailVerifiedAt: new Date(),
         status: UserStatus.ACTIVE,
       },
     });
-    console.log("Super admin created successfully.");
+
+    // Assign SUPER_ADMIN role
+    await prisma.userRole.create({
+      data: {
+        userId: newUser.id,
+        roleId: superAdminRole.id,
+      },
+    });
+
+    logger.success(`🌱 Super admin created: ${env.admin.email}`);
   } else {
-    console.log("Super admin already exists.");
+    logger.info(`Super admin already exists: ${env.admin.email}`);
   }
 };
 

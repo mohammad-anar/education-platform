@@ -1,0 +1,184 @@
+// ==========================================
+// PEOPLE DOMAIN (STUDENT, TEACHER, STAFF, GUARDIAN)
+// ==========================================
+
+model Student {
+  id                    String       @id @default(uuid()) @db.Uuid
+
+  instituteId           String       @db.Uuid
+  userId                String?      @unique @db.Uuid
+
+  studentCode           String
+  admissionNo           String?
+
+  dateOfBirth           DateTime?
+  gender                Gender?
+  bloodGroup            String?
+
+  admissionDate         DateTime?
+  graduationDate        DateTime?
+
+  status                RecordStatus @default(ACTIVE)
+
+  emergencyContactName  String?
+  emergencyContactPhone String?
+
+  metadata              Json?
+
+  createdAt             DateTime     @default(now())
+  updatedAt             DateTime     @updatedAt
+  deletedAt             DateTime?
+
+  // Relations
+  institute             Institute    @relation(fields: [instituteId], references: [id], onDelete: Cascade)
+  user                  User?        @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  guardians             StudentGuardian[]
+
+  // Academic & LMS Relations
+  academicEnrollments    StudentAcademicEnrollment[]
+  courseEnrollments      CourseEnrollment[]
+  lessonProgress         LessonProgress[]
+  learningAccessOverrides LearningItemAccessOverride[]
+
+  // Assessment, Exam & Result Relations
+  assignmentSubmissions AssignmentSubmission[]
+  assessmentResults     AssessmentResult[]
+  examMarks             ExamMark[]
+  studentResults        StudentResult[]
+
+  // Attendance & Certificates
+  attendanceRecords     AttendanceRecord[]
+  lessonNotes           LessonNote[]
+  certificates          Certificate[]
+
+  @@unique([instituteId, studentCode])
+  @@unique([instituteId, admissionNo])
+  @@map("students")
+  @@index([instituteId])
+  @@index([status])
+  @@index([studentCode])
+}
+
+model Guardian {
+  id          String            @id @default(uuid()) @db.Uuid
+
+  instituteId String            @db.Uuid
+  userId      String?           @unique @db.Uuid
+
+  name        String?
+  phone       String?
+  email       String?
+  occupation  String?
+  nationalId  String?
+
+  status      RecordStatus      @default(ACTIVE)
+
+  metadata    Json?
+
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+  deletedAt   DateTime?
+
+  institute   Institute         @relation(fields: [instituteId], references: [id], onDelete: Cascade)
+  user        User?             @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  students    StudentGuardian[]
+
+  @@map("guardians")
+  @@index([instituteId])
+}
+
+model StudentGuardian {
+  id              String   @id @default(uuid()) @db.Uuid
+
+  studentId       String   @db.Uuid
+  guardianId      String   @db.Uuid
+
+  relationship    String
+  isPrimary       Boolean  @default(false)
+
+  canViewAcademic Boolean  @default(true)
+  canViewFinance  Boolean  @default(false)
+
+  createdAt       DateTime @default(now())
+
+  student         Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  guardian        Guardian @relation(fields: [guardianId], references: [id], onDelete: Cascade)
+
+  @@unique([studentId, guardianId])
+  @@map("student_guardians")
+  @@index([studentId])
+  @@index([guardianId])
+}
+
+model TeacherProfile {
+  id               String           @id @default(uuid()) @db.Uuid
+
+  instituteId      String           @db.Uuid
+  userId           String           @unique @db.Uuid
+
+  employeeCode     String?
+
+  designation      String?
+  qualification    String?
+  specialization   String?
+  experienceYears  Int?
+
+  joiningDate      DateTime?
+  leavingDate      DateTime?
+
+  employmentStatus EmploymentStatus @default(ACTIVE)
+
+  metadata         Json?
+
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+  deletedAt        DateTime?
+
+  institute        Institute        @relation(fields: [instituteId], references: [id], onDelete: Cascade)
+  user             User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  courseAssignments CourseTeacher[]
+  classAssignments  ClassTeacher[]
+  classRoutines     ClassRoutine[]
+  liveClasses       LiveClass[]
+
+  attendanceCalendars   AttendanceCalendar[]
+  calendarRules         AttendanceCalendarRule[]
+  attendanceSessions    AttendanceSession[]
+
+  @@unique([instituteId, employeeCode])
+  @@map("teacher_profiles")
+  @@index([instituteId, employmentStatus])
+}
+
+model StaffProfile {
+  id               String           @id @default(uuid()) @db.Uuid
+
+  instituteId      String           @db.Uuid
+  userId           String           @unique @db.Uuid
+
+  employeeCode     String?
+
+  departmentId     String?          @db.Uuid
+  designationId    String?          @db.Uuid
+
+  joiningDate      DateTime?
+  leavingDate      DateTime?
+
+  employmentStatus EmploymentStatus @default(ACTIVE)
+
+  metadata         Json?
+
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+  deletedAt        DateTime?
+
+  institute        Institute        @relation(fields: [instituteId], references: [id], onDelete: Cascade)
+  user             User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([instituteId, employeeCode])
+  @@map("staff_profiles")
+  @@index([instituteId, employmentStatus])
+}

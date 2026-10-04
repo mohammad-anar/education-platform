@@ -1,0 +1,356 @@
+// ==========================================
+// COMMON & LIFECYCLE ENUMS
+// ==========================================
+
+enum RecordStatus {
+  ACTIVE
+  INACTIVE
+  ARCHIVED
+  DELETED
+}
+
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+  SUSPENDED
+  INVITED
+  LOCKED
+}
+
+enum MembershipStatus {
+  ACTIVE
+  INACTIVE
+  SUSPENDED
+  INVITED
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  OTHER
+  PREFER_NOT_TO_SAY
+}
+
+enum EmploymentStatus {
+  ACTIVE
+  INACTIVE
+  ON_LEAVE
+  SUSPENDED
+  TERMINATED
+  RESIGNED
+  RETIRED
+}
+
+enum EnrollmentStatus {
+  ACTIVE
+  COMPLETED
+  DROPPED
+  SUSPENDED
+  TRANSFERRED
+  CANCELLED
+  EXPIRED
+  BANNED
+}
+
+enum CourseRestrictionType {
+  BAN
+  SUSPEND
+  REVOKE_ACCESS
+}
+
+// ==========================================
+// LMS & DIGITAL LEARNING ENUMS
+// ==========================================
+
+enum CourseStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+  SUSPENDED
+}
+
+enum LessonType {
+  TEXT
+  VIDEO
+  AUDIO
+  PDF
+  DOCUMENT
+  PRESENTATION
+  LINK
+  LIVE_RECORDING
+  EMBED
+}
+
+enum LessonVideoType {
+  YOUTUBE
+  VIMEO
+  EXTERNAL
+  UPLOAD
+  EMBED
+}
+
+enum VideoProcessingStatus {
+  PENDING
+  PROCESSING
+  READY
+  FAILED
+}
+
+enum LearningItemType {
+  LESSON
+  QUIZ
+  ASSIGNMENT
+}
+
+enum LearningProgressStatus {
+  NOT_STARTED
+  IN_PROGRESS
+  COMPLETED
+  LOCKED
+}
+
+enum AccessType {
+  FREE
+  ENROLLED
+  LOCKED
+  RESTRICTED
+}
+
+
+// ==========================================
+// ASSESSMENT, EXAM, MARKING & GRADING ENUMS
+// ==========================================
+
+enum MarkingComponentType {
+  EXAM
+  MIDTERM
+  FINAL
+  QUIZ
+  ASSIGNMENT
+  ATTENDANCE
+  PRESENTATION
+  PRACTICAL
+  VIVA
+  PROJECT
+  PARTICIPATION
+  CUSTOM
+}
+
+enum AssessmentAggregationMethod {
+  SUM
+  AVERAGE
+  BEST_N
+  LATEST
+  MAX
+  MIN
+  DIRECT
+}
+
+enum AssessmentType {
+  QUIZ
+  ASSIGNMENT
+  PRESENTATION
+  PROJECT
+  CLASS_TEST
+  MIDTERM
+  FINAL
+  PRACTICAL
+  VIVA
+  MOCK_TEST
+  CUSTOM
+}
+
+enum AssessmentStatus {
+  DRAFT
+  SCHEDULED
+  OPEN
+  CLOSED
+  REVIEW
+  APPROVED
+  PUBLISHED
+  ARCHIVED
+}
+
+enum QuestionType {
+  MCQ
+  MULTIPLE_ANSWER
+  TRUE_FALSE
+  FILL_BLANK
+  SHORT_ANSWER
+  LONG_ANSWER
+  MATCHING
+  IMAGE_BASED
+}
+
+enum ResultStatus {
+  DRAFT
+  CALCULATED
+  UNDER_REVIEW
+  TEACHER_REVIEW
+  APPROVED
+  PUBLISHED
+  ARCHIVED
+  LOCKED
+  VOIDED
+}
+
+enum AssignmentSubmissionStatus {
+  DRAFT
+  SUBMITTED
+  LATE_SUBMITTED
+  EVALUATED
+  REJECTED
+  RESUBMITTED
+}
+
+// ==========================================
+// ATTENDANCE & ROUTINE ENUMS
+// ==========================================
+
+enum AttendanceCalendarStatus {
+  DRAFT
+  ACTIVE
+  COMPLETED
+  ARCHIVED
+}
+
+enum AttendanceExceptionType {
+  HOLIDAY
+  CANCELLED
+  RESCHEDULED
+  SPECIAL_CLASS
+  NO_CLASS
+}
+
+enum AttendanceSessionStatus {
+  SCHEDULED
+  OPEN
+  COMPLETED
+  CANCELLED
+  RESCHEDULED
+}
+
+enum AttendanceStatus {
+  PRESENT
+  ABSENT
+  LATE
+  EXCUSED
+  LEAVE
+  HALF_DAY
+}
+
+enum ScheduleType {
+  CLASS
+  EXAM
+  QUIZ
+  LIVE_CLASS
+  EVENT
+  MEETING
+  HOLIDAY
+  OTHER
+}
+
+// ==========================================
+// NOTIFICATION & COMMUNICATION ENUMS
+// ==========================================
+
+enum NotificationType {
+  SYSTEM
+  ASSIGNMENT
+  QUIZ
+  EXAM
+  RESULT
+  RESULT_OVERRIDE
+  ATTENDANCE
+  NOTICE
+  LIVE_CLASS
+  COURSE
+  PAYMENT
+  SUBSCRIPTION
+  GENERAL
+}
+
+enum NotificationChannel {
+  IN_APP
+  EMAIL
+  SMS
+  PUSH
+}
+
+enum NoticeAudienceType {
+  INSTITUTE
+  PROGRAM
+  LEVEL
+  CLASS
+  SECTION
+  COURSE
+  ROLE
+  USER
+}
+
+// ==========================================
+// FILE & PLATFORM ASSETS
+// ==========================================
+
+enum FileType {
+  IMAGE
+  VIDEO
+  AUDIO
+  DOCUMENT
+  PDF
+  SPREADSHEET
+  PRESENTATION
+  ARCHIVE
+  OTHER
+}
+
+enum CertificateStatus {
+  DRAFT
+  ISSUED
+  REVOKED
+  EXPIRED
+}
+
+// ==========================================
+// SAAS, BILLING & SUBSCRIPTION ENUMS
+// ==========================================
+
+enum SubscriptionStatus {
+  TRIAL
+  ACTIVE
+  PAST_DUE
+  CANCELLED
+  EXPIRED
+  SUSPENDED
+}
+
+enum PaymentStatus {
+  PENDING
+  PROCESSING
+  SUCCESS
+  FAILED
+  CANCELLED
+  REFUNDED
+  PARTIALLY_REFUNDED
+}
+
+enum PaymentMethod {
+  CASH
+  CARD
+  BANK
+  BKASH
+  NAGAD
+  ROCKET
+  SSL_COMMERZ
+  STRIPE
+  PAYPAL
+  OTHER
+}
+
+enum BillingCycle {
+  MONTHLY
+  QUARTERLY
+  HALF_YEARLY
+  YEARLY
+  CUSTOM
+}

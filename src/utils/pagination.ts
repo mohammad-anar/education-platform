@@ -1,25 +1,12 @@
-type IOptions = {
-  page?: number;
-  limit?: number;
-  sortBy?: string;
-  sortOrder?: "asc" | "desc";
-};
+import { IPaginationOptions, IPaginationResult } from "../types/pagination.js";
 
-type IOptionsResult = {
-  page: number;
-  limit: number;
-  skip: number;
-  sortBy: string;
-  sortOrder: "asc" | "desc";
-};
-
-export const calculatePagination = (options: IOptions): IOptionsResult => {
-  const page = Number(options.page || 1);
-  const limit = Number(options.limit || 10);
+export const calculatePagination = (options: IPaginationOptions = {}): IPaginationResult => {
+  const page = Math.max(1, Number(options.page) || 1);
+  const limit = Math.max(1, Math.min(100, Number(options.limit) || 10));
   const skip = (page - 1) * limit;
 
   const sortBy = options.sortBy || "createdAt";
-  const sortOrder = options.sortOrder || "desc";
+  const sortOrder = options.sortOrder === "asc" ? "asc" : "desc";
 
   return {
     page,
@@ -30,4 +17,9 @@ export const calculatePagination = (options: IOptions): IOptionsResult => {
   };
 };
 
-export default calculatePagination;
+export const paginationHelpers = {
+  calculatePagination,
+};
+
+export default paginationHelpers;
+

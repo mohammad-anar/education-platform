@@ -1,0 +1,184 @@
+// ==========================================
+// PLATFORM SERVICES, ASSETS, NOTIFICATIONS & AUDIT
+// ==========================================
+
+model Notice {
+  id          String           @id @default(uuid()) @db.Uuid
+
+  instituteId String           @db.Uuid
+
+  title       String
+  content     String
+
+  priority    Int              @default(0)
+
+  publishAt   DateTime?
+  expiresAt   DateTime?
+
+  status      RecordStatus     @default(ACTIVE)
+  createdById String?          @db.Uuid
+
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+
+  institute   Institute        @relation(fields: [instituteId], references: [id], onDelete: Cascade)
+  audiences   NoticeAudience[]
+
+  @@map("notices")
+  @@index([instituteId, publishAt])
+}
+
+model NoticeAudience {
+  id       String             @id @default(uuid()) @db.Uuid
+
+  noticeId String             @db.Uuid
+  type     NoticeAudienceType
+  targetId String?
+
+  notice   Notice             @relation(fields: [noticeId], references: [id], onDelete: Cascade)
+
+  @@map("notice_audiences")
+  @@index([type, targetId])
+  @@index([noticeId])
+}
+
+model Notification {
+  id        String              @id @default(uuid()) @db.Uuid
+
+  userId    String              @db.Uuid
+
+  type      NotificationType
+  title     String
+  message   String
+
+  channel   NotificationChannel @default(IN_APP)
+  readAt    DateTime?
+  data      Json?
+
+  createdAt DateTime            @default(now())
+
+  user      User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("notifications")
+  @@index([userId, readAt])
+  @@index([userId, createdAt])
+  @@index([createdAt])
+}
+
+model FileAsset {
+  id              String           @id @default(uuid()) @db.Uuid
+
+  instituteId     String           @db.Uuid
+  uploadedById    String?          @db.Uuid
+
+  provider        String
+  providerKey     String
+
+  originalName    String
+  fileName        String?
+
+  mimeType        String
+  type            FileType
+
+  sizeBytes       BigInt
+
+  url             String?
+  thumbnailUrl    String?
+
+  checksum        String?
+  metadata        Json?
+
+  createdAt       DateTime         @default(now())
+  deletedAt       DateTime?
+
+  institute       Institute        @relation(fields: [instituteId], references: [id], onDelete: Cascade)
+  lessonResources LessonResource[]
+  lessonVideos    LessonVideo[]
+
+  @@map("file_assets")
+  @@index([instituteId])
+  @@index([provider, providerKey])
+}
+
+model CertificateTemplate {
+  id           String        @id @default(uuid()) @db.Uuid
+
+  instituteId  String        @db.Uuid
+
+  name         String
+  templateData Json
+
+  status       RecordStatus  @default(ACTIVE)
+
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  institute    Institute     @relation(fields: [instituteId], references: [id], onDelete: Cascade)
+  certificates Certificate[]
+
+  @@map("certificate_templates")
+  @@index([instituteId])
+}
+
+model Certificate {
+  id               String               @id @default(uuid()) @db.Uuid
+
+  instituteId      String               @db.Uuid
+  studentId        String               @db.Uuid
+  templateId       String?              @db.Uuid
+
+  certificateNo    String               @unique
+  title            String
+
+  issuedAt         DateTime
+  expiresAt        DateTime?
+
+  verificationCode String               @unique
+
+  pdfUrl           String?
+  qrCodeUrl        String?
+
+  status           CertificateStatus    @default(ISSUED)
+  metadata         Json?
+
+  createdAt        DateTime             @default(now())
+  updatedAt        DateTime             @updatedAt
+
+  institute        Institute            @relation(fields: [instituteId], references: [id], onDelete: Cascade)
+  student          Student              @relation(fields: [studentId], references: [id], onDelete: Restrict)
+  template         CertificateTemplate? @relation(fields: [templateId], references: [id], onDelete: SetNull)
+
+  @@map("certificates")
+  @@index([studentId])
+  @@index([instituteId])
+}
+
+model AuditLog {
+  id          String     @id @default(uuid()) @db.Uuid
+
+  instituteId String?    @db.Uuid
+  userId      String?    @db.Uuid
+
+  action      String
+
+  entityType  String
+  entityId    String?
+
+  oldValue    Json?
+  newValue    Json?
+
+  ipAddress   String?
+  userAgent   String?
+  requestId   String?
+
+  createdAt   DateTime   @default(now())
+
+  institute   Institute? @relation(fields: [instituteId], references: [id], onDelete: SetNull)
+  user        User?      @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@map("audit_logs")
+  @@index([instituteId, createdAt])
+  @@index([entityType, entityId])
+  @@index([userId, createdAt])
+  @@index([requestId])
+}

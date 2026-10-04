@@ -1,0 +1,525 @@
+// ==========================================
+// LMS & DIGITAL LEARNING DOMAIN
+// ==========================================
+
+model Course {
+  id                  String             @id @default(uuid()) @db.Uuid
+
+  instituteId         String             @db.Uuid
+  subjectId           String?            @db.Uuid
+
+  name                String
+  code                String
+  slug                String?
+
+  description         String?
+  thumbnailUrl        String?
+  level               String?
+
+  startDate           DateTime?
+  endDate             DateTime?
+
+  status              CourseStatus       @default(DRAFT)
+  isPublic            Boolean            @default(false)
+
+  price               Decimal?           @db.Decimal(12, 2)
+  currency            String             @default("BDT")
+
+  metadata            Json?
+
+  createdAt           DateTime           @default(now())
+  updatedAt           DateTime           @updatedAt
+  deletedAt           DateTime?
+
+  // Relations
+  institute           Institute          @relation(fields: [instituteId], references: [id], onDelete: Cascade)
+  subject             Subject?           @relation(fields: [subjectId], references: [id], onDelete: SetNull)
+
+  teachers            CourseTeacher[]
+  enrollments         CourseEnrollment[]
+  milestones          Milestone[]
+  modules             Module[]
+  bundleItems         CourseBundleItem[]
+  classRoutines       ClassRoutine[]
+  liveClasses         LiveClass[]
+
+  assessments         Assessment[]
+  exams               Exam[]
+  markingSchemeAssignments MarkingSchemeAssignment[]
+  studentResults      StudentResult[]
+  attendanceCalendars AttendanceCalendar[]
+  attendanceSessions  AttendanceSession[]
+
+  @@unique([instituteId, code])
+  @@map("courses")
+  @@index([instituteId, status])
+  @@index([subjectId])
+}
+
+model CourseTeacher {
+  courseId  String         @db.Uuid
+  teacherId String         @db.Uuid
+
+  isPrimary Boolean        @default(false)
+
+  course    Course         @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  teacher   TeacherProfile @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+
+  @@id([courseId, teacherId])
+  @@map("course_teachers")
+}
+
+model CourseEnrollment {
+  id              String           @id @default(uuid()) @db.Uuid
+
+  studentId       String           @db.Uuid
+  courseId        String           @db.Uuid
+
+  enrolledAt      DateTime         @default(now())
+  startDate       DateTime?
+  endDate         DateTime?
+
+  status          EnrollmentStatus @default(ACTIVE)
+  progressPercent Decimal          @default(0) @db.Decimal(5, 2)
+
+  completedAt     DateTime?
+
+  metadata        Json?
+
+  student         Student          @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  course          Course           @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  milestoneProgress MilestoneProgress[]
+  moduleProgress    ModuleProgress[]
+  learningItemProgress LearningItemProgress[]
+  restrictions      CourseAccessRestriction[]
+
+  @@unique([studentId, courseId])
+  @@map("course_enrollments")
+  @@index([courseId, status])
+  @@index([studentId])
+}
+
+model CourseAccessRestriction {
+  id               String                @id @default(uuid()) @db.Uuid
+
+  enrollmentId     String                @db.Uuid
+
+  type             CourseRestrictionType // BAN, SUSPEND, REVOKE_ACCESS
+  reason           String?
+
+  startsAt         DateTime              @default(now())
+  expiresAt        DateTime?             // null = indefinite
+
+  createdById      String                @db.Uuid
+
+  revokedAt        DateTime?
+  revokedById      String?               @db.Uuid
+  revocationReason String?
+
+  createdAt        DateTime              @default(now())
+  updatedAt        DateTime              @updatedAt
+
+  enrollment       CourseEnrollment      @relation(fields: [enrollmentId], references: [id], onDelete: Cascade)
+  createdByUser    User                  @relation("CourseRestrictionCreatedByUser", fields: [createdById], references: [id], onDelete: Restrict)
+  revokedByUser    User?                 @relation("CourseRestrictionRevokedByUser", fields: [revokedById], references: [id], onDelete: SetNull)
+
+  @@map("course_access_restrictions")
+  @@index([enrollmentId, type])
+  @@index([enrollmentId, startsAt])
+}
+
+model CourseBundle {
+  id          String             @id @default(uuid()) @db.Uuid
+
+  instituteId String             @db.Uuid
+
+  name        String
+  code        String
+  description String?
+
+  price       Decimal            @db.Decimal(12, 2)
+  discount    Decimal?           @db.Decimal(5, 2)
+
+  startDate   DateTime?
+  endDate     DateTime?
+
+  status      RecordStatus       @default(ACTIVE)
+
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
+
+  institute   Institute          @relation(fields: [instituteId], references: [id], onDelete: Cascade)
+  items       CourseBundleItem[]
+
+  @@unique([instituteId, code])
+  @@map("course_bundles")
+  @@index([instituteId])
+}
+
+model CourseBundleItem {
+  bundleId  String       @db.Uuid
+  courseId  String       @db.Uuid
+
+  sortOrder Int          @default(0)
+
+  bundle    CourseBundle @relation(fields: [bundleId], references: [id], onDelete: Cascade)
+  course    Course       @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  @@id([bundleId, courseId])
+  @@map("course_bundle_items")
+}
+
+// ------------------------------------------
+// MILESTONE & MODULE HIERARCHY
+// ------------------------------------------
+
+model Milestone {
+  id          String           @id @default(uuid()) @db.Uuid
+
+  courseId    String           @db.Uuid
+
+  title       String
+  description String?
+
+  sortOrder   Int              @default(0)
+  status      RecordStatus     @default(ACTIVE)
+
+  startDate   DateTime?
+  endDate     DateTime?
+
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+
+  course      Course           @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  modules     Module[]
+  progress    MilestoneProgress[]
+
+  @@map("milestones")
+  @@index([courseId, sortOrder])
+}
+
+model Module {
+  id          String           @id @default(uuid()) @db.Uuid
+
+  courseId    String           @db.Uuid
+  milestoneId String?          @db.Uuid
+
+  title       String
+  description String?
+
+  sortOrder   Int              @default(0)
+  status      RecordStatus     @default(ACTIVE)
+
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+
+  course      Course           @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  milestone   Milestone?       @relation(fields: [milestoneId], references: [id], onDelete: SetNull)
+
+  learningItems LearningItem[]
+  lessons     Lesson[]
+  progress    ModuleProgress[]
+
+  @@map("modules")
+  @@index([courseId, sortOrder])
+  @@index([milestoneId])
+}
+
+// ------------------------------------------
+// UNIFIED ORDERING: LEARNING ITEM (LESSON / QUIZ / ASSIGNMENT)
+// ------------------------------------------
+
+model LearningItem {
+  id              String                       @id @default(uuid()) @db.Uuid
+
+  moduleId        String                       @db.Uuid
+
+  type            LearningItemType             // LESSON, QUIZ, ASSIGNMENT
+  title           String
+  description     String?
+  sortOrder       Int                          @default(0)
+
+  accessType      AccessType                   @default(LOCKED)
+
+  lessonId        String?                      @unique @db.Uuid
+  assessmentId    String?                      @db.Uuid
+
+  isRequired      Boolean                      @default(true)
+  isPublished     Boolean                      @default(false)
+
+  metadata        Json?
+
+  createdAt       DateTime                     @default(now())
+  updatedAt       DateTime                     @updatedAt
+
+  module          Module                       @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+  lesson          Lesson?                      @relation("LearningItemLesson", fields: [lessonId], references: [id], onDelete: SetNull)
+  assessment      Assessment?                  @relation(fields: [assessmentId], references: [id], onDelete: SetNull)
+
+  prerequisites   LearningItemPrerequisite[]   @relation("ItemPrerequisites")
+  prerequisiteFor LearningItemPrerequisite[]   @relation("PrerequisiteForItem")
+  accessOverrides LearningItemAccessOverride[]
+  progress        LearningItemProgress[]
+
+  @@map("learning_items")
+  @@index([moduleId, sortOrder])
+  @@index([accessType])
+  @@index([type])
+}
+
+model LearningItemPrerequisite {
+  id                 String       @id @default(uuid()) @db.Uuid
+
+  learningItemId     String       @db.Uuid
+  prerequisiteItemId String       @db.Uuid
+
+  minScorePercent    Decimal?     @db.Decimal(5, 2)
+
+  createdAt          DateTime     @default(now())
+
+  learningItem       LearningItem @relation("ItemPrerequisites", fields: [learningItemId], references: [id], onDelete: Cascade)
+  prerequisiteItem   LearningItem @relation("PrerequisiteForItem", fields: [prerequisiteItemId], references: [id], onDelete: Cascade)
+
+  @@unique([learningItemId, prerequisiteItemId])
+  @@map("learning_item_prerequisites")
+  @@index([prerequisiteItemId])
+}
+
+model LearningItemAccessOverride {
+  id             String       @id @default(uuid()) @db.Uuid
+
+  learningItemId String       @db.Uuid
+  studentId      String       @db.Uuid
+
+  accessType     AccessType
+
+  startsAt       DateTime?
+  expiresAt      DateTime?
+  reason         String?
+
+  createdById    String?      @db.Uuid
+  createdAt      DateTime     @default(now())
+
+  learningItem   LearningItem @relation(fields: [learningItemId], references: [id], onDelete: Cascade)
+  student        Student      @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  createdByUser  User?        @relation("AccessOverrideCreatedByUser", fields: [createdById], references: [id], onDelete: SetNull)
+
+  @@unique([learningItemId, studentId])
+  @@map("learning_item_access_overrides")
+  @@index([studentId])
+}
+
+// ------------------------------------------
+// LESSON (RICH TEXT CONTENT, VIDEOS, RESOURCES & NOTES)
+// ------------------------------------------
+
+model Lesson {
+  id              String           @id @default(uuid()) @db.Uuid
+
+  moduleId        String           @db.Uuid
+
+  title           String
+  slug            String?
+  description     String?
+
+  type            LessonType       @default(TEXT)
+  accessType      AccessType       @default(LOCKED)
+
+  // Rich Text Content (Tiptap JSON + Rendered HTML Cache)
+  contentJson     Json?
+  contentHtml     String?
+
+  durationSeconds Int?
+
+  sortOrder       Int              @default(0)
+  isPreview       Boolean          @default(false)
+  status          RecordStatus     @default(ACTIVE)
+
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+
+  module          Module           @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+  learningItem    LearningItem?    @relation("LearningItemLesson")
+
+  videos          LessonVideo[]
+  resources       LessonResource[]
+  notes           LessonNote[]
+  progress        LessonProgress[]
+
+  @@map("lessons")
+  @@index([moduleId, sortOrder])
+  @@index([accessType])
+}
+
+model LessonVideo {
+  id               String                 @id @default(uuid()) @db.Uuid
+
+  lessonId         String                 @db.Uuid
+
+  type             LessonVideoType        // YOUTUBE, VIMEO, EXTERNAL, UPLOAD, EMBED
+  accessType       AccessType             @default(LOCKED)
+
+  title            String?
+  provider         String?
+  externalUrl      String?
+
+  fileAssetId      String?                @db.Uuid
+  hlsMasterUrl     String?
+  thumbnailUrl     String?
+
+  durationSeconds  Int?
+  processingStatus VideoProcessingStatus? @default(READY)
+
+  sortOrder        Int                    @default(0)
+
+  createdAt        DateTime               @default(now())
+  updatedAt        DateTime               @updatedAt
+
+  lesson           Lesson                 @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  fileAsset        FileAsset?             @relation(fields: [fileAssetId], references: [id], onDelete: SetNull)
+
+  @@map("lesson_videos")
+  @@index([lessonId, sortOrder])
+  @@index([accessType])
+}
+
+model LessonResource {
+  id          String       @id @default(uuid()) @db.Uuid
+
+  lessonId    String       @db.Uuid
+  fileAssetId String?      @db.Uuid
+
+  title       String
+  description String?
+  url         String?
+
+  sortOrder   Int          @default(0)
+
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  lesson      Lesson       @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  fileAsset   FileAsset?   @relation(fields: [fileAssetId], references: [id], onDelete: SetNull)
+
+  @@map("lesson_resources")
+  @@index([lessonId, sortOrder])
+}
+
+model LessonNote {
+  id          String   @id @default(uuid()) @db.Uuid
+
+  lessonId    String   @db.Uuid
+  studentId   String   @db.Uuid
+
+  // Student Rich Text Notes (Tiptap JSON + Rendered HTML)
+  contentJson Json?
+  contentHtml String?
+
+  isPinned    Boolean  @default(false)
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  lesson      Lesson   @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  student     Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@unique([lessonId, studentId])
+  @@map("lesson_notes")
+  @@index([studentId])
+}
+
+// ------------------------------------------
+// DETAILED PROGRESS TRACKING
+// ------------------------------------------
+
+model MilestoneProgress {
+  id              String           @id @default(uuid()) @db.Uuid
+
+  enrollmentId    String           @db.Uuid
+  milestoneId     String           @db.Uuid
+
+  progressPercent Decimal          @default(0) @db.Decimal(5, 2)
+  isCompleted     Boolean          @default(false)
+  completedAt     DateTime?
+
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+
+  enrollment      CourseEnrollment @relation(fields: [enrollmentId], references: [id], onDelete: Cascade)
+  milestone       Milestone        @relation(fields: [milestoneId], references: [id], onDelete: Cascade)
+
+  @@unique([enrollmentId, milestoneId])
+  @@map("milestone_progress")
+}
+
+model ModuleProgress {
+  id              String           @id @default(uuid()) @db.Uuid
+
+  enrollmentId    String           @db.Uuid
+  moduleId        String           @db.Uuid
+
+  progressPercent Decimal          @default(0) @db.Decimal(5, 2)
+  isCompleted     Boolean          @default(false)
+  completedAt     DateTime?
+
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+
+  enrollment      CourseEnrollment @relation(fields: [enrollmentId], references: [id], onDelete: Cascade)
+  module          Module           @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+
+  @@unique([enrollmentId, moduleId])
+  @@map("module_progress")
+}
+
+model LearningItemProgress {
+  id              String                 @id @default(uuid()) @db.Uuid
+
+  enrollmentId    String                 @db.Uuid
+  learningItemId  String                 @db.Uuid
+
+  status          LearningProgressStatus @default(NOT_STARTED)
+  progressPercent Decimal                @default(0) @db.Decimal(5, 2)
+
+  startedAt       DateTime?
+  completedAt     DateTime?
+
+  lastPositionSec Int?
+  score           Decimal?               @db.Decimal(10, 2)
+
+  createdAt       DateTime               @default(now())
+  updatedAt       DateTime               @updatedAt
+
+  enrollment      CourseEnrollment       @relation(fields: [enrollmentId], references: [id], onDelete: Cascade)
+  learningItem    LearningItem           @relation(fields: [learningItemId], references: [id], onDelete: Cascade)
+
+  @@unique([enrollmentId, learningItemId])
+  @@map("learning_item_progress")
+  @@index([enrollmentId, status])
+  @@index([learningItemId])
+}
+
+model LessonProgress {
+  id              String    @id @default(uuid()) @db.Uuid
+
+  lessonId        String    @db.Uuid
+  studentId       String    @db.Uuid
+
+  progressPercent Decimal   @default(0) @db.Decimal(5, 2)
+  watchedSeconds  Int       @default(0)
+  lastPositionSec Int?
+
+  isCompleted     Boolean   @default(false)
+
+  firstAccessedAt DateTime?
+  lastAccessedAt  DateTime?
+  completedAt     DateTime?
+
+  lesson          Lesson    @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  student         Student   @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@unique([lessonId, studentId])
+  @@map("lesson_progress")
+  @@index([studentId])
+}

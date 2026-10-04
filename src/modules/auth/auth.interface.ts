@@ -1,13 +1,13 @@
-import { UserRole } from "@prisma/client";
-
 export type IRegisterUser = {
-  firstName?: string;
+  firstName: string;
+  middleName?: string;
   lastName?: string;
   email: string;
   password: string;
   phone?: string;
-  profileImage?: string;
-  role?: UserRole;
+  avatarUrl?: string;
+  roleCode?: string;
+  instituteId?: string;
 };
 
 export type ILoginUser = {
@@ -31,4 +31,13 @@ export type IResetPassword = {
 
 export type IRefreshToken = {
   refreshToken: string;
+};
+
+export type ISendOtp = {
+  email: string;
+};
+
+export type IVerifyOtp = {
+  email: string;
+  otp: string;
 };

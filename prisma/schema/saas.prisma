@@ -1,0 +1,200 @@
+// ==========================================
+// SAAS, INSTITUTE & SUBSCRIPTION DOMAIN
+// ==========================================
+
+model Institute {
+  id                String    @id @default(uuid()) @db.Uuid
+
+  name              String
+  legalName         String?
+  code              String
+  slug              String    @unique
+
+  registrationNo    String?
+  establishedDate   DateTime?
+
+  logoUrl           String?
+  faviconUrl        String?
+
+  website           String?
+  email             String?
+  phone             String?
+  alternatePhone    String?
+
+  address           String?
+  country           String    @default("Bangladesh")
+  division          String?
+  district          String?
+  upazila           String?
+  postalCode        String?
+
+  timezone          String    @default("Asia/Dhaka")
+  currency          String    @default("BDT")
+  locale            String    @default("en-BD")
+
+  status            RecordStatus @default(ACTIVE)
+
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  deletedAt         DateTime?
+
+  // Settings & Membership Relations
+  settings          InstituteSetting?
+  memberships       InstituteMembership[]
+  roles             Role[]
+
+  // Academic Relations
+  academicYears     AcademicYear[]
+  programs          Program[]
+  levels            Level[]
+  classGroups       ClassGroup[]
+  subjects          Subject[]
+  classRoutines     ClassRoutine[]
+
+  // People Profiles
+  students          Student[]
+  teachers          TeacherProfile[]
+  staff             StaffProfile[]
+  guardians         Guardian[]
+
+  // LMS & Course Relations
+  courses           Course[]
+  courseBundles     CourseBundle[]
+  liveClasses       LiveClass[]
+
+  // Assessment, Marking & Examination Relations
+  markingSchemes    MarkingScheme[]
+  markingSchemeAssignments MarkingSchemeAssignment[]
+  assessments       Assessment[]
+  exams             Exam[]
+  gradingSystems    GradingSystem[]
+  studentResults    StudentResult[]
+
+  // Attendance & Events
+  attendancePolicies  AttendancePolicy[]
+  attendanceCalendars AttendanceCalendar[]
+  attendanceSessions  AttendanceSession[]
+
+  // Communication & Assets
+  notices           Notice[]
+  files             FileAsset[]
+  certificates      Certificate[]
+  certificateTemplates CertificateTemplate[]
+
+  // SaaS Subscription & Audit
+  subscription      Subscription?
+  auditLogs         AuditLog[]
+
+  @@map("institutes")
+  @@index([status])
+  @@index([code])
+}
+
+model InstituteSetting {
+  id                  String   @id @default(uuid()) @db.Uuid
+  instituteId         String   @unique @db.Uuid
+
+  academicSettings    Json?
+  attendanceSettings  Json?
+  gradingSettings     Json?
+  examinationSettings Json?
+
+  notificationSettings Json?
+  brandingSettings    Json?
+  paymentSettings     Json?
+  securitySettings    Json?
+
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  institute           Institute @relation(fields: [instituteId], references: [id], onDelete: Cascade)
+
+  @@map("institute_settings")
+}
+
+model SubscriptionPlan {
+  id          String   @id @default(uuid()) @db.Uuid
+
+  name        String
+  code        String   @unique
+  description String?
+
+  monthlyPrice Decimal? @db.Decimal(12, 2)
+  yearlyPrice  Decimal? @db.Decimal(12, 2)
+
+  maxStudents  Int?
+  maxTeachers  Int?
+  maxStaff     Int?
+  maxCourses   Int?
+  maxStorageMb BigInt?
+
+  features    Json?
+
+  status      RecordStatus @default(ACTIVE)
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  subscriptions Subscription[]
+
+  @@map("subscription_plans")
+  @@index([status])
+}
+
+model Subscription {
+  id           String             @id @default(uuid()) @db.Uuid
+
+  instituteId  String             @unique @db.Uuid
+  planId       String             @db.Uuid
+
+  status       SubscriptionStatus @default(TRIAL)
+  billingCycle BillingCycle
+
+  startedAt    DateTime
+  trialEndsAt  DateTime?
+  expiresAt    DateTime?
+
+  autoRenew    Boolean            @default(true)
+
+  metadata     Json?
+
+  createdAt    DateTime           @default(now())
+  updatedAt    DateTime           @updatedAt
+
+  institute    Institute          @relation(fields: [instituteId], references: [id], onDelete: Cascade)
+  plan         SubscriptionPlan   @relation(fields: [planId], references: [id], onDelete: Restrict)
+
+  payments     SubscriptionPayment[]
+
+  @@map("subscriptions")
+  @@index([status])
+  @@index([expiresAt])
+}
+
+model SubscriptionPayment {
+  id             String        @id @default(uuid()) @db.Uuid
+
+  subscriptionId String        @db.Uuid
+
+  amount         Decimal       @db.Decimal(12, 2)
+  currency       String        @default("BDT")
+
+  method         PaymentMethod
+  status         PaymentStatus @default(PENDING)
+
+  transactionId  String?
+  gateway        String?
+  gatewayData    Json?
+
+  paidAt         DateTime?
+
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+
+  subscription   Subscription  @relation(fields: [subscriptionId], references: [id], onDelete: Cascade)
+
+  @@map("subscription_payments")
+  @@index([subscriptionId])
+  @@index([transactionId])
+  @@index([status])
+}

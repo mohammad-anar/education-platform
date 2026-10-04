@@ -1,30 +1,28 @@
 import express from "express";
+import { HealthRoutes } from "./health/health.route.js";
 import { AuthRoutes } from "./auth/auth.route.js";
-import { UserRoutes } from "./users/users.route.js";
-import { CoursesRoutes } from "./courses/courses.route.js";
-import { MilestonesRoutes } from "./milestones/milestones.route.js";
-import { ModuleRoutes } from "./modules/modules.route.js";
-import { LessonsRoutes } from "./lessons/lessons.route.js";
-import { VideosRoutes } from "./videos/videos.route.js";
-import { EnrollmentsRoutes } from "./enrollments/enrollments.route.js";
-import { PaymentsRoutes } from "./payments/payments.route.js";
-import { ProgressRoutes } from "./progress/progress.route.js";
-import { NotificationsRoutes } from "./notifications/notifications.route.js";
+import { SaasRoutes } from "./saas/saas.route.js";
+import { IdentityRoutes } from "./identity/identity.route.js";
+import { PeopleRoutes } from "./people/people.route.js";
+import { AcademicRoutes } from "./academic/academic.route.js";
+import { AttendanceRoutes } from "./attendance/attendance.route.js";
+import { LmsRoutes } from "./lms/lms.route.js";
+import { AssessmentRoutes } from "./assessment/assessment.route.js";
+import { PlatformRoutes } from "./platform/platform.route.js";
 
 const router = express.Router();
 
 const moduleRoutes = [
+  { path: "/health", route: HealthRoutes },
   { path: "/auth", route: AuthRoutes },
-  { path: "/users", route: UserRoutes },
-  { path: "/courses", route: CoursesRoutes },
-  { path: "/milestones", route: MilestonesRoutes },
-  { path: "/modules", route: ModuleRoutes },
-  { path: "/lessons", route: LessonsRoutes },
-  { path: "/videos", route: VideosRoutes },
-  { path: "/enrollments", route: EnrollmentsRoutes },
-  { path: "/payments", route: PaymentsRoutes },
-  { path: "/progress", route: ProgressRoutes },
-  { path: "/notifications", route: NotificationsRoutes },
+  { path: "/saas", route: SaasRoutes },
+  { path: "/identity", route: IdentityRoutes },
+  { path: "/people", route: PeopleRoutes },
+  { path: "/academic", route: AcademicRoutes },
+  { path: "/attendance", route: AttendanceRoutes },
+  { path: "/lms", route: LmsRoutes },
+  { path: "/assessment", route: AssessmentRoutes },
+  { path: "/platform", route: PlatformRoutes },
 ];
 
 moduleRoutes.forEach((route) => router.use(route.path, route.route));

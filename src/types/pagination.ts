@@ -1,6 +1,6 @@
 export type IPaginationOptions = {
-  page?: number;
-  limit?: number;
+  page?: number | string;
+  limit?: number | string;
   sortBy?: string;
   sortOrder?: "asc" | "desc";
 };
@@ -15,9 +15,22 @@ export type IPaginationResult = {
 
 export interface IQueryParams {
   searchTerm?: string;
-  sort?: string;
-  page?: number;
-  limit?: number;
+  sortBy?: string;
+  sortOrder?: "asc" | "desc";
+  page?: number | string;
+  limit?: number | string;
   fields?: string;
   [key: string]: any;
 }
+
+export type IMeta = {
+  page: number;
+  limit: number;
+  total: number;
+  totalPage: number;
+};
+
+export type IGenericResponse<T> = {
+  meta: IMeta;
+  data: T;
+};

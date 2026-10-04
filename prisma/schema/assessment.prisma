@@ -1,0 +1,512 @@
+// ==========================================
+// ASSESSMENT, EXAM, MARKING CRITERIA & RESULT ENGINE DOMAIN
+// ==========================================
+
+// ------------------------------------------
+// 1. DYNAMIC MARKING SCHEME & COMPONENTS
+// ------------------------------------------
+
+model MarkingScheme {
+  id              String                    @id @default(uuid()) @db.Uuid
+
+  instituteId     String                    @db.Uuid
+
+  name            String
+  code            String
+  description     String?
+
+  totalWeight     Decimal                   @default(100) @db.Decimal(7, 3)
+  version         Int                       @default(1)
+  isDefault       Boolean                   @default(false)
+
+  status          RecordStatus              @default(ACTIVE)
+
+  createdAt       DateTime                  @default(now())
+  updatedAt       DateTime                  @updatedAt
+
+  institute       Institute                 @relation(fields: [instituteId], references: [id], onDelete: Cascade)
+
+  components      MarkingComponent[]
+  assignments     MarkingSchemeAssignment[]
+  studentResults  StudentResult[]
+
+  @@unique([instituteId, code, version])
+  @@map("marking_schemes")
+  @@index([instituteId])
+  @@index([status])
+}
+
+model MarkingComponent {
+  id                String                       @id @default(uuid()) @db.Uuid
+
+  markingSchemeId   String                       @db.Uuid
+
+  name              String
+  code              String
+
+  type              MarkingComponentType
+  weightPercent     Decimal                      @db.Decimal(5, 2)
+
+  maxMarks          Decimal?                     @db.Decimal(10, 2)
+  passMarks         Decimal?                     @db.Decimal(10, 2)
+
+  aggregationMethod AssessmentAggregationMethod  @default(AVERAGE)
+  bestNCount        Int?
+
+  sortOrder         Int                          @default(0)
+  isRequired        Boolean                      @default(true)
+
+  createdAt         DateTime                     @default(now())
+  updatedAt         DateTime                     @updatedAt
+
+  markingScheme     MarkingScheme                @relation(fields: [markingSchemeId], references: [id], onDelete: Cascade)
+
+  assessments       Assessment[]
+  resultComponents  ResultComponent[]
+
+  @@unique([markingSchemeId, code])
+  @@map("marking_components")
+  @@index([markingSchemeId])
+}
+
+model MarkingSchemeAssignment {
+  id              String         @id @default(uuid()) @db.Uuid
+
+  instituteId     String         @db.Uuid
+  markingSchemeId String         @db.Uuid
+
+  academicYearId  String?        @db.Uuid
+  programId       String?        @db.Uuid
+  levelId         String?        @db.Uuid
+  classGroupId    String?        @db.Uuid
+  sectionId       String?        @db.Uuid
+  subjectId       String?        @db.Uuid
+  courseId        String?        @db.Uuid
+
+  priority        Int            @default(0) // Higher priority overrides broader schemes
+  isActive        Boolean        @default(true)
+
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+
+  institute       Institute      @relation(fields: [instituteId], references: [id], onDelete: Cascade)
+  markingScheme   MarkingScheme  @relation(fields: [markingSchemeId], references: [id], onDelete: Cascade)
+
+  academicYear    AcademicYear?  @relation(fields: [academicYearId], references: [id], onDelete: SetNull)
+  program         Program?       @relation(fields: [programId], references: [id], onDelete: SetNull)
+  level           Level?         @relation(fields: [levelId], references: [id], onDelete: SetNull)
+  classGroup      ClassGroup?    @relation(fields: [classGroupId], references: [id], onDelete: SetNull)
+  section         Section?       @relation(fields: [sectionId], references: [id], onDelete: SetNull)
+  subject         Subject?       @relation(fields: [subjectId], references: [id], onDelete: SetNull)
+  course          Course?        @relation(fields: [courseId], references: [id], onDelete: SetNull)
+
+  @@map("marking_scheme_assignments")
+  @@index([instituteId])
+  @@index([academicYearId, classGroupId, subjectId])
+  @@index([markingSchemeId])
+}
+
+// ------------------------------------------
+// 2. ACTUAL ASSESSMENTS & ASSIGNMENTS
+// ------------------------------------------
+
+model Assessment {
+  id                 String             @id @default(uuid()) @db.Uuid
+
+  instituteId        String             @db.Uuid
+  markingComponentId String?            @db.Uuid
+
+  courseId           String?            @db.Uuid
+  subjectId          String?            @db.Uuid
+  academicYearId     String?            @db.Uuid
+  classGroupId       String?            @db.Uuid
+  sectionId          String?            @db.Uuid
+
+  title              String
+  code               String?
+
+  type               AssessmentType
+  description        String?
+
+  maxMarks           Decimal            @db.Decimal(10, 2)
+  passMarks          Decimal?           @db.Decimal(10, 2)
+  negativeMarks      Decimal?           @db.Decimal(10, 2)
+
+  startAt            DateTime?
+  endAt              DateTime?
+  durationMinutes    Int?
+
+  status             AssessmentStatus   @default(DRAFT)
+  settings           Json?
+
+  createdAt          DateTime           @default(now())
+  updatedAt          DateTime           @updatedAt
+
+  institute          Institute          @relation(fields: [instituteId], references: [id], onDelete: Cascade)
+  markingComponent   MarkingComponent?  @relation(fields: [markingComponentId], references: [id], onDelete: SetNull)
+
+  course             Course?            @relation(fields: [courseId], references: [id], onDelete: SetNull)
+  subject            Subject?           @relation(fields: [subjectId], references: [id], onDelete: SetNull)
+  academicYear       AcademicYear?      @relation(fields: [academicYearId], references: [id], onDelete: SetNull)
+  classGroup         ClassGroup?        @relation(fields: [classGroupId], references: [id], onDelete: SetNull)
+  section            Section?           @relation(fields: [sectionId], references: [id], onDelete: SetNull)
+
+  questions          QuizQuestion[]
+  results            AssessmentResult[]
+  assignment         Assignment?
+  learningItems      LearningItem[]
+
+  @@map("assessments")
+  @@index([instituteId, type])
+  @@index([courseId])
+  @@index([subjectId])
+  @@index([classGroupId])
+}
+
+model QuizQuestion {
+  id            String       @id @default(uuid()) @db.Uuid
+
+  assessmentId  String       @db.Uuid
+
+  type          QuestionType
+  question      String
+  explanation   String?
+
+  marks         Decimal      @db.Decimal(10, 2)
+  negativeMarks Decimal?     @db.Decimal(10, 2)
+
+  sortOrder     Int          @default(0)
+
+  options       Json?
+  correctAnswer Json?
+  metadata      Json?
+
+  assessment    Assessment   @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
+
+  @@map("quiz_questions")
+  @@index([assessmentId, sortOrder])
+}
+
+model AssessmentResult {
+  id           String       @id @default(uuid()) @db.Uuid
+
+  assessmentId String       @db.Uuid
+  studentId    String       @db.Uuid
+
+  marks        Decimal      @db.Decimal(10, 2)
+  percentage   Decimal?     @db.Decimal(7, 3)
+
+  feedback     String?
+
+  submittedAt  DateTime?
+  evaluatedAt  DateTime?
+
+  status       ResultStatus @default(DRAFT)
+  metadata     Json?
+
+  assessment   Assessment   @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
+  student      Student      @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@unique([assessmentId, studentId])
+  @@map("assessment_results")
+  @@index([studentId])
+}
+
+model Assignment {
+  id                  String                 @id @default(uuid()) @db.Uuid
+
+  assessmentId        String                 @unique @db.Uuid
+
+  title               String
+  description         String?
+
+  startAt             DateTime?
+  dueAt               DateTime?
+
+  allowLateSubmission Boolean                @default(false)
+  maxAttempts         Int                    @default(1)
+
+  createdAt           DateTime               @default(now())
+  updatedAt           DateTime               @updatedAt
+
+  assessment          Assessment             @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
+  submissions         AssignmentSubmission[]
+
+  @@map("assignments")
+}
+
+model AssignmentSubmission {
+  id           String                     @id @default(uuid()) @db.Uuid
+
+  assignmentId String                     @db.Uuid
+  studentId    String                     @db.Uuid
+
+  attempt      Int                        @default(1)
+  submittedAt  DateTime?
+
+  content      String?
+  fileUrl      String?
+
+  marks        Decimal?                   @db.Decimal(10, 2)
+  feedback     String?
+
+  status       AssignmentSubmissionStatus @default(SUBMITTED)
+
+  createdAt    DateTime                   @default(now())
+  updatedAt    DateTime                   @updatedAt
+
+  assignment   Assignment                 @relation(fields: [assignmentId], references: [id], onDelete: Cascade)
+  student      Student                    @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@unique([assignmentId, studentId, attempt])
+  @@map("assignment_submissions")
+  @@index([studentId])
+}
+
+// ------------------------------------------
+// 3. EXAMS & COMPONENTS
+// ------------------------------------------
+
+model Exam {
+  id             String             @id @default(uuid()) @db.Uuid
+
+  instituteId    String             @db.Uuid
+  courseId       String?            @db.Uuid
+
+  academicYearId String?            @db.Uuid
+  programId      String?            @db.Uuid
+  classGroupId   String?            @db.Uuid
+  sectionId      String?            @db.Uuid
+
+  name           String
+  code           String
+  description    String?
+
+  examType       String?
+
+  startDate      DateTime?
+  endDate        DateTime?
+
+  status         AssessmentStatus   @default(DRAFT)
+
+  totalMarks     Decimal?           @db.Decimal(10, 2)
+  passMarks      Decimal?           @db.Decimal(10, 2)
+
+  settings       Json?
+
+  createdAt      DateTime           @default(now())
+  updatedAt      DateTime           @updatedAt
+
+  institute      Institute          @relation(fields: [instituteId], references: [id], onDelete: Cascade)
+  course         Course?            @relation(fields: [courseId], references: [id], onDelete: SetNull)
+
+  academicYear   AcademicYear?      @relation(fields: [academicYearId], references: [id], onDelete: SetNull)
+  program        Program?           @relation(fields: [programId], references: [id], onDelete: SetNull)
+  classGroup     ClassGroup?        @relation(fields: [classGroupId], references: [id], onDelete: SetNull)
+  section        Section?           @relation(fields: [sectionId], references: [id], onDelete: SetNull)
+
+  components     ExamComponent[]
+  marks          ExamMark[]
+
+  @@unique([instituteId, code])
+  @@map("exams")
+  @@index([instituteId])
+  @@index([classGroupId])
+  @@index([academicYearId])
+}
+
+model ExamComponent {
+  id            String     @id @default(uuid()) @db.Uuid
+
+  examId        String     @db.Uuid
+
+  name          String
+  code          String
+
+  maxMarks      Decimal    @db.Decimal(10, 2)
+  passMarks     Decimal?   @db.Decimal(10, 2)
+
+  weight        Decimal?   @db.Decimal(7, 3)
+  negativeMarks Decimal?   @db.Decimal(10, 2)
+
+  sortOrder     Int        @default(0)
+
+  exam          Exam       @relation(fields: [examId], references: [id], onDelete: Cascade)
+  marks         ExamMark[]
+
+  @@unique([examId, code])
+  @@map("exam_components")
+}
+
+model ExamMark {
+  id              String        @id @default(uuid()) @db.Uuid
+
+  examId          String        @db.Uuid
+  examComponentId String        @db.Uuid
+  studentId       String        @db.Uuid
+
+  marks           Decimal       @db.Decimal(10, 2)
+
+  enteredById     String?       @db.Uuid
+  approvedById    String?       @db.Uuid
+
+  status          ResultStatus  @default(DRAFT)
+
+  enteredAt       DateTime      @default(now())
+  approvedAt      DateTime?
+
+  remarks         String?
+
+  exam            Exam          @relation(fields: [examId], references: [id], onDelete: Cascade)
+  examComponent   ExamComponent @relation(fields: [examComponentId], references: [id], onDelete: Restrict)
+  student         Student       @relation(fields: [studentId], references: [id], onDelete: Restrict)
+
+  @@unique([examComponentId, studentId])
+  @@map("exam_marks")
+  @@index([studentId, examId])
+}
+
+// ------------------------------------------
+// 4. STUDENT RESULT, MANUAL OVERRIDE & BREAKDOWN
+// ------------------------------------------
+
+model StudentResult {
+  id                     String            @id @default(uuid()) @db.Uuid
+
+  instituteId            String            @db.Uuid
+  studentId              String            @db.Uuid
+  academicYearId         String            @db.Uuid
+
+  classGroupId           String?           @db.Uuid
+  sectionId              String?           @db.Uuid
+  subjectId              String?           @db.Uuid
+  courseId               String?           @db.Uuid
+
+  markingSchemeId        String?           @db.Uuid
+  gradingSystemId        String?           @db.Uuid
+
+  totalMaxMarks          Decimal?          @db.Decimal(10, 2)
+  calculatedMarks        Decimal           @db.Decimal(10, 2)
+  manualAdjustmentMarks  Decimal?          @db.Decimal(10, 2)
+  finalObtainedMarks     Decimal           @db.Decimal(10, 2)
+
+  percentage             Decimal?          @db.Decimal(7, 3)
+  gpa                    Decimal?          @db.Decimal(5, 2)
+  grade                  String?
+
+  status                 ResultStatus      @default(DRAFT)
+  version                Int               @default(1)
+
+  overrideReason         String?
+  overriddenByUserId     String?           @db.Uuid
+  overriddenAt           DateTime?
+
+  approvedByUserId       String?           @db.Uuid
+  approvedAt             DateTime?
+
+  publishedAt            DateTime?
+  metadata               Json?
+
+  createdAt              DateTime          @default(now())
+  updatedAt              DateTime          @updatedAt
+
+  institute              Institute         @relation(fields: [instituteId], references: [id], onDelete: Cascade)
+  student                Student           @relation(fields: [studentId], references: [id], onDelete: Restrict)
+  academicYear           AcademicYear      @relation(fields: [academicYearId], references: [id], onDelete: Restrict)
+  classGroup             ClassGroup?       @relation(fields: [classGroupId], references: [id], onDelete: SetNull)
+  section                Section?          @relation(fields: [sectionId], references: [id], onDelete: SetNull)
+  subject                Subject?          @relation(fields: [subjectId], references: [id], onDelete: SetNull)
+  course                 Course?           @relation(fields: [courseId], references: [id], onDelete: SetNull)
+
+  markingScheme          MarkingScheme?    @relation(fields: [markingSchemeId], references: [id], onDelete: SetNull)
+  gradingSystem          GradingSystem?    @relation(fields: [gradingSystemId], references: [id], onDelete: SetNull)
+
+  overriddenByUser       User?             @relation("ResultOverriddenByUser", fields: [overriddenByUserId], references: [id], onDelete: SetNull)
+  approvedByUser         User?             @relation("ResultApprovedByUser", fields: [approvedByUserId], references: [id], onDelete: SetNull)
+
+  components             ResultComponent[]
+
+  @@unique([studentId, academicYearId, subjectId, version])
+  @@map("student_results")
+  @@index([studentId, academicYearId])
+  @@index([classGroupId, sectionId])
+  @@index([instituteId, status])
+}
+
+model ResultComponent {
+  id                 String           @id @default(uuid()) @db.Uuid
+
+  studentResultId    String           @db.Uuid
+  markingComponentId String           @db.Uuid
+
+  rawObtainedMarks   Decimal?         @db.Decimal(10, 2)
+  rawMaxMarks        Decimal?         @db.Decimal(10, 2)
+
+  weightPercent      Decimal          @db.Decimal(5, 2)
+  calculatedMarks    Decimal          @db.Decimal(10, 2)
+
+  manualMarks        Decimal?         @db.Decimal(10, 2)
+  finalMarks         Decimal          @db.Decimal(10, 2)
+
+  overrideReason     String?
+  overriddenByUserId String?          @db.Uuid
+  overriddenAt       DateTime?
+
+  metadata           Json?
+
+  studentResult      StudentResult    @relation(fields: [studentResultId], references: [id], onDelete: Cascade)
+  markingComponent   MarkingComponent @relation(fields: [markingComponentId], references: [id], onDelete: Restrict)
+  overriddenByUser   User?            @relation("ComponentOverriddenByUser", fields: [overriddenByUserId], references: [id], onDelete: SetNull)
+
+  @@unique([studentResultId, markingComponentId])
+  @@map("result_components")
+  @@index([studentResultId])
+  @@index([markingComponentId])
+}
+
+// ------------------------------------------
+// 5. GRADING SYSTEM & RULES
+// ------------------------------------------
+
+model GradingSystem {
+  id             String          @id @default(uuid()) @db.Uuid
+
+  instituteId    String          @db.Uuid
+
+  name           String
+  code           String
+  description    String?
+
+  status         RecordStatus    @default(ACTIVE)
+
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+
+  institute      Institute       @relation(fields: [instituteId], references: [id], onDelete: Cascade)
+  rules          GradeRule[]
+  studentResults StudentResult[]
+
+  @@unique([instituteId, code])
+  @@map("grading_systems")
+  @@index([instituteId])
+}
+
+model GradeRule {
+  id              String        @id @default(uuid()) @db.Uuid
+
+  gradingSystemId String        @db.Uuid
+
+  minScore        Decimal       @db.Decimal(7, 3)
+  maxScore        Decimal       @db.Decimal(7, 3)
+
+  grade           String
+  gpa             Decimal?      @db.Decimal(5, 2)
+
+  remark          String?
+  isPass          Boolean       @default(true)
+
+  gradingSystem   GradingSystem @relation(fields: [gradingSystemId], references: [id], onDelete: Cascade)
+
+  @@map("grade_rules")
+  @@index([gradingSystemId, minScore, maxScore])
+}

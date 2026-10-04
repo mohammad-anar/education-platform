@@ -1,13 +1,15 @@
 import { z } from "zod";
-import { UserRole } from "@prisma/client";
 
 const registerZodSchema = z.object({
-  firstName: z.string().optional(),
+  firstName: z.string().min(1, "First name is required"),
+  middleName: z.string().optional(),
   lastName: z.string().optional(),
   email: z.string().email("Valid email is required"),
   phone: z.string().optional(),
   password: z.string().min(6, "Password must be at least 6 characters"),
-  role: z.nativeEnum(UserRole).optional(),
+  avatarUrl: z.string().url().optional(),
+  roleCode: z.string().optional(),
+  instituteId: z.string().uuid().optional(),
 });
 
 const loginZodSchema = z.object({
@@ -33,6 +35,15 @@ const refreshTokenZodSchema = z.object({
   refreshToken: z.string().min(1, "Refresh token is required"),
 });
 
+const sendOtpZodSchema = z.object({
+  email: z.string().email("Valid email is required"),
+});
+
+const verifyOtpZodSchema = z.object({
+  email: z.string().email("Valid email is required"),
+  otp: z.string().length(6, "OTP must be 6 digits"),
+});
+
 export const AuthValidation = {
   registerZodSchema,
   loginZodSchema,
@@ -40,4 +51,8 @@ export const AuthValidation = {
   forgotPasswordZodSchema,
   resetPasswordZodSchema,
   refreshTokenZodSchema,
+  sendOtpZodSchema,
+  verifyOtpZodSchema,
 };
+
+export default AuthValidation;
