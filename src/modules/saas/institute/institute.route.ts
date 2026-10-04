@@ -20,6 +20,18 @@ router.get(
 );
 
 router.get(
+  "/:id/stats",
+  auth(),
+  InstituteController.getStats,
+);
+
+router.patch(
+  "/:id/settings",
+  auth(),
+  InstituteController.updateSettings,
+);
+
+router.get(
   "/:id",
   auth(),
   InstituteController.getById,

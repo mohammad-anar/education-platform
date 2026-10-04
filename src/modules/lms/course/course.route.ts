@@ -15,13 +15,17 @@ router.post(
 
 router.get(
   "/",
-  auth(),
   CourseController.getAll,
 );
 
 router.get(
-  "/:id",
+  "/:id/stats",
   auth(),
+  CourseController.getStats,
+);
+
+router.get(
+  "/:id",
   CourseController.getById,
 );
 

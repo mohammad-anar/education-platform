@@ -20,6 +20,12 @@ router.get(
 );
 
 router.get(
+  "/:id/stats",
+  auth(),
+  StudentController.getStats,
+);
+
+router.get(
   "/:id",
   auth(),
   StudentController.getById,

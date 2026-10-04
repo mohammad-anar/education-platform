@@ -19,6 +19,12 @@ router.get(
   CalendarController.getAll,
 );
 
+router.post(
+  "/:id/generate-sessions",
+  auth(),
+  CalendarController.generateSessions,
+);
+
 router.get(
   "/:id",
   auth(),

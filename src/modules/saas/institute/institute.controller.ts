@@ -15,7 +15,7 @@ const create = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getAll = catchAsync(async (req: Request, res: Response) => {
-  const filters = pick(req.query, ["searchTerm", "instituteId", "status"]);
+  const filters = pick(req.query, ["searchTerm", "status", "country", "division", "district"]);
   const paginationOptions = pick(req.query, ["page", "limit", "sortBy", "sortOrder"]);
   const result = await InstituteService.getAll(filters, paginationOptions);
   sendResponse(res, {
@@ -38,6 +38,17 @@ const getById = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const getStats = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const result = await InstituteService.getStats(id);
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: "Institute analytics and stats retrieved successfully",
+    data: result,
+  });
+});
+
 const update = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
   const result = await InstituteService.update(id, req.body);
@@ -45,6 +56,17 @@ const update = catchAsync(async (req: Request, res: Response) => {
     statusCode: 200,
     success: true,
     message: "Institute updated successfully",
+    data: result,
+  });
+});
+
+const updateSettings = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const result = await InstituteService.updateSettings(id, req.body);
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: "Institute settings updated successfully",
     data: result,
   });
 });
@@ -64,6 +86,8 @@ export const InstituteController = {
   create,
   getAll,
   getById,
+  getStats,
   update,
+  updateSettings,
   deleteById,
 };

@@ -15,7 +15,7 @@ const create = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getAll = catchAsync(async (req: Request, res: Response) => {
-  const filters = pick(req.query, ["searchTerm", "instituteId", "status"]);
+  const filters = pick(req.query, ["searchTerm", "instituteId", "subjectId", "status", "isPublic"]);
   const paginationOptions = pick(req.query, ["page", "limit", "sortBy", "sortOrder"]);
   const result = await CourseService.getAll(filters, paginationOptions);
   sendResponse(res, {
@@ -33,7 +33,18 @@ const getById = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, {
     statusCode: 200,
     success: true,
-    message: "Course retrieved successfully",
+    message: "Course details and curriculum retrieved successfully",
+    data: result,
+  });
+});
+
+const getStats = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const result = await CourseService.getStats(id);
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: "Course analytics & enrollment stats retrieved successfully",
     data: result,
   });
 });
@@ -64,6 +75,7 @@ export const CourseController = {
   create,
   getAll,
   getById,
+  getStats,
   update,
   deleteById,
 };

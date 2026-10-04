@@ -15,7 +15,7 @@ const create = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getAll = catchAsync(async (req: Request, res: Response) => {
-  const filters = pick(req.query, ["searchTerm", "instituteId", "status"]);
+  const filters = pick(req.query, ["searchTerm", "instituteId", "status", "gender", "bloodGroup"]);
   const paginationOptions = pick(req.query, ["page", "limit", "sortBy", "sortOrder"]);
   const result = await StudentService.getAll(filters, paginationOptions);
   sendResponse(res, {
@@ -33,7 +33,18 @@ const getById = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, {
     statusCode: 200,
     success: true,
-    message: "Student retrieved successfully",
+    message: "Student profile retrieved successfully",
+    data: result,
+  });
+});
+
+const getStats = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const result = await StudentService.getStats(id);
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: "Student stats & performance retrieved successfully",
     data: result,
   });
 });
@@ -64,6 +75,7 @@ export const StudentController = {
   create,
   getAll,
   getById,
+  getStats,
   update,
   deleteById,
 };

@@ -1,11 +1,12 @@
 import prisma from "../../../config/prisma.js";
 import { IPaginationOptions } from "../../../types/pagination.js";
-import { paginationHelpers } from "../../../utils/pagination.js";
+import { prismaHelper } from "../../../utils/prismaHelper.js";
 import { IInstituteFilterRequest } from "./institute.interface.js";
 
 const create = async (payload: any) => {
-  const result = await (prisma as any).institute.create({
+  const result = await prisma.institute.create({
     data: payload,
+    include: { settings: true },
   });
   return result;
 };
@@ -14,59 +15,115 @@ const getAll = async (
   filters: IInstituteFilterRequest,
   paginationOptions: IPaginationOptions,
 ) => {
-  const { page, limit, skip, sortBy, sortOrder } =
-    paginationHelpers.calculatePagination(paginationOptions);
-
-  const whereConditions: any = { ...filters };
-
-  const result = await (prisma as any).institute.findMany({
-    where: whereConditions,
-    skip,
-    take: limit,
-    orderBy: { [sortBy]: sortOrder },
-  });
-
-  const total = await (prisma as any).institute.count({
-    where: whereConditions,
-  });
-
-  return {
-    meta: {
-      page,
-      limit,
-      total,
-      totalPage: Math.ceil(total / limit),
-    },
-    data: result,
+  const { searchTerm, ...filterData } = filters;
+  const whereConditions = {
+    ...prismaHelper.buildFilterCondition(filterData),
+    ...(searchTerm
+      ? {
+          OR: [
+            { name: { contains: searchTerm, mode: "insensitive" } },
+            { code: { contains: searchTerm, mode: "insensitive" } },
+            { email: { contains: searchTerm, mode: "insensitive" } },
+          ],
+        }
+      : {}),
   };
+
+  return prismaHelper.findManyPaginated(prisma.institute, {
+    pagination: paginationOptions,
+    where: whereConditions,
+    include: {
+      settings: true,
+      subscription: { include: { plan: true } },
+      _count: {
+        select: {
+          students: true,
+          teachers: true,
+          courses: true,
+          academicYears: true,
+        },
+      },
+    },
+  });
 };
 
 const getById = async (id: string) => {
-  const result = await (prisma as any).institute.findUnique({
+  return prisma.institute.findUnique({
     where: { id },
+    include: {
+      settings: true,
+      subscription: { include: { plan: true } },
+      _count: {
+        select: {
+          students: true,
+          teachers: true,
+          staff: true,
+          courses: true,
+          academicYears: true,
+        },
+      },
+    },
   });
-  return result;
+};
+
+const getStats = async (id: string) => {
+  const [studentsCount, teachersCount, coursesCount, activeEnrollments, todaySessions] =
+    await Promise.all([
+      prisma.student.count({ where: { instituteId: id, status: "ACTIVE" } }),
+      prisma.teacherProfile.count({ where: { instituteId: id, employmentStatus: "ACTIVE" } }),
+      prisma.course.count({ where: { instituteId: id, status: "PUBLISHED" } }),
+      prisma.studentAcademicEnrollment.count({ where: { student: { instituteId: id }, status: "ACTIVE" } }),
+      prisma.attendanceSession.count({
+        where: {
+          instituteId: id,
+          date: {
+            gte: new Date(new Date().setHours(0, 0, 0, 0)),
+            lte: new Date(new Date().setHours(23, 59, 59, 999)),
+          },
+        },
+      }),
+    ]);
+
+  return {
+    studentsCount,
+    teachersCount,
+    coursesCount,
+    activeEnrollments,
+    todaySessions,
+  };
 };
 
 const update = async (id: string, payload: any) => {
-  const result = await (prisma as any).institute.update({
+  return prisma.institute.update({
     where: { id },
     data: payload,
+    include: { settings: true },
   });
-  return result;
+};
+
+const updateSettings = async (id: string, settingsPayload: any) => {
+  return prisma.instituteSetting.upsert({
+    where: { instituteId: id },
+    update: settingsPayload,
+    create: {
+      instituteId: id,
+      ...settingsPayload,
+    },
+  });
 };
 
 const deleteById = async (id: string) => {
-  const result = await (prisma as any).institute.delete({
+  return prisma.institute.delete({
     where: { id },
   });
-  return result;
 };
 
 export const InstituteService = {
   create,
   getAll,
   getById,
+  getStats,
   update,
+  updateSettings,
   deleteById,
 };
