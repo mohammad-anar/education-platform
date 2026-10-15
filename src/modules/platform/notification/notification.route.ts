@@ -1,6 +1,6 @@
 import express from "express";
 import validateRequest from "../../../middleware/validate.middleware.js";
-import auth from "../../../middleware/auth.middleware.js";
+import { requirePermission } from "../../../middleware/auth.middleware.js";
 import { NotificationController } from "./notification.controller.js";
 import { NotificationValidation } from "./notification.validation.js";
 
@@ -8,33 +8,33 @@ const router = express.Router();
 
 router.post(
   "/",
-  auth(),
+  requirePermission("platform.notification.create"),
   validateRequest(NotificationValidation.createZodSchema),
   NotificationController.create,
 );
 
 router.get(
   "/",
-  auth(),
+  requirePermission("platform.notification.read"),
   NotificationController.getAll,
 );
 
 router.get(
   "/:id",
-  auth(),
+  requirePermission("platform.notification.read"),
   NotificationController.getById,
 );
 
 router.patch(
   "/:id",
-  auth(),
+  requirePermission("platform.notification.update"),
   validateRequest(NotificationValidation.updateZodSchema),
   NotificationController.update,
 );
 
 router.delete(
   "/:id",
-  auth(),
+  requirePermission("platform.notification.delete"),
   NotificationController.deleteById,
 );
 
