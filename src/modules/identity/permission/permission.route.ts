@@ -1,6 +1,6 @@
 import express from "express";
 import validateRequest from "../../../middleware/validate.middleware.js";
-import auth from "../../../middleware/auth.middleware.js";
+import { requirePermission } from "../../../middleware/auth.middleware.js";
 import { PermissionController } from "./permission.controller.js";
 import { PermissionValidation } from "./permission.validation.js";
 
@@ -8,33 +8,39 @@ const router = express.Router();
 
 router.post(
   "/",
-  auth(),
+  requirePermission("identity.permission.create"),
   validateRequest(PermissionValidation.createZodSchema),
   PermissionController.create,
 );
 
 router.get(
   "/",
-  auth(),
+  requirePermission("identity.permission.read"),
   PermissionController.getAll,
 );
 
 router.get(
+  "/catalog",
+  requirePermission("identity.permission.read"),
+  PermissionController.listCatalog,
+);
+
+router.get(
   "/:id",
-  auth(),
+  requirePermission("identity.permission.read"),
   PermissionController.getById,
 );
 
 router.patch(
   "/:id",
-  auth(),
+  requirePermission("identity.permission.update"),
   validateRequest(PermissionValidation.updateZodSchema),
   PermissionController.update,
 );
 
 router.delete(
   "/:id",
-  auth(),
+  requirePermission("identity.permission.delete"),
   PermissionController.deleteById,
 );
 
