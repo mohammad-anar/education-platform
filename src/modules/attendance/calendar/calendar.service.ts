@@ -1,9 +1,11 @@
+import ApiError from "../../../utils/ApiError.js";
+import { StatusCodes } from "http-status-codes";
 import prisma from "../../../config/prisma.js";
 import { IPaginationOptions } from "../../../types/pagination.js";
 import { prismaHelper } from "../../../utils/prismaHelper.js";
 import { ICalendarFilterRequest } from "./calendar.interface.js";
 
-const create = async (payload: any) => {
+const create = async (payload: any, ctx?: any) => {
   return prisma.attendanceCalendar.create({
     data: payload,
     include: { rules: true, exceptions: true, policy: true },
@@ -13,6 +15,7 @@ const create = async (payload: any) => {
 const getAll = async (
   filters: ICalendarFilterRequest,
   paginationOptions: IPaginationOptions,
+  ctx?: any,
 ) => {
   const { searchTerm, instituteId, academicYearId, classGroupId, sectionId, subjectId, courseId, status, ...filterData } = filters as any;
   const whereConditions: any = {
@@ -34,6 +37,10 @@ const getAll = async (
       : {}),
   };
 
+  if (ctx?.instituteId && !ctx?.isPlatformAdmin) {
+    whereConditions.instituteId = ctx.instituteId;
+  }
+
   return prismaHelper.findManyPaginated(prisma.attendanceCalendar, {
     pagination: paginationOptions,
     where: whereConditions,
@@ -49,7 +56,7 @@ const getAll = async (
   });
 };
 
-const getById = async (id: string) => {
+const getById = async (id: string, ctx?: any) => {
   return prisma.attendanceCalendar.findUnique({
     where: { id },
     include: {
@@ -139,14 +146,14 @@ const generateSessions = async (calendarId: string) => {
   };
 };
 
-const update = async (id: string, payload: any) => {
+const update = async (id: string, payload: any, ctx?: any) => {
   return prisma.attendanceCalendar.update({
     where: { id },
     data: payload,
   });
 };
 
-const deleteById = async (id: string) => {
+const deleteById = async (id: string, ctx?: any) => {
   return prisma.attendanceCalendar.delete({
     where: { id },
   });
