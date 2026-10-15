@@ -1,6 +1,6 @@
 import express from "express";
 import validateRequest from "../../../middleware/validate.middleware.js";
-import auth from "../../../middleware/auth.middleware.js";
+import { requirePermission } from "../../../middleware/auth.middleware.js";
 import { AssessmentController } from "./assessment.controller.js";
 import { AssessmentValidation } from "./assessment.validation.js";
 
@@ -8,33 +8,45 @@ const router = express.Router();
 
 router.post(
   "/",
-  auth(),
+  requirePermission("assessment.assessment.create"),
   validateRequest(AssessmentValidation.createZodSchema),
   AssessmentController.create,
 );
 
 router.get(
   "/",
-  auth(),
+  requirePermission("assessment.assessment.read"),
   AssessmentController.getAll,
 );
 
 router.get(
   "/:id",
-  auth(),
+  requirePermission("assessment.assessment.read"),
   AssessmentController.getById,
+);
+
+router.post(
+  "/:id/submit-quiz",
+  requirePermission("assessment.assessment.read"),
+  AssessmentController.submitQuiz,
+);
+
+router.post(
+  "/:id/submit-assignment",
+  requirePermission("assessment.assessment.read"),
+  AssessmentController.submitAssignment,
 );
 
 router.patch(
   "/:id",
-  auth(),
+  requirePermission("assessment.assessment.update"),
   validateRequest(AssessmentValidation.updateZodSchema),
   AssessmentController.update,
 );
 
 router.delete(
   "/:id",
-  auth(),
+  requirePermission("assessment.assessment.delete"),
   AssessmentController.deleteById,
 );
 
