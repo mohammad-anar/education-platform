@@ -193,6 +193,7 @@ model AttendanceRecord {
 
   sessionId      String            @db.Uuid
   studentId      String            @db.Uuid
+  instituteId    String            @db.Uuid
 
   status         AttendanceStatus  // PRESENT, ABSENT, LATE, EXCUSED, LEAVE, HALF_DAY
 
@@ -210,11 +211,14 @@ model AttendanceRecord {
 
   session        AttendanceSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
   student        Student           @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  institute      Institute         @relation(fields: [instituteId], references: [id], onDelete: Cascade)
   markedByUser   User?             @relation("AttendanceMarkedByUser", fields: [markedById], references: [id], onDelete: SetNull)
   modifiedByUser User?             @relation("AttendanceModifiedByUser", fields: [modifiedById], references: [id], onDelete: SetNull)
 
   @@unique([sessionId, studentId])
   @@map("attendance_records")
+  @@index([instituteId, status])
+  @@index([instituteId, studentId])
   @@index([studentId, status])
   @@index([sessionId])
 }
