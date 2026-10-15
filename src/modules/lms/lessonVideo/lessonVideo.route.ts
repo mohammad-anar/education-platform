@@ -1,6 +1,6 @@
 import express from "express";
 import validateRequest from "../../../middleware/validate.middleware.js";
-import auth from "../../../middleware/auth.middleware.js";
+import { requirePermission } from "../../../middleware/auth.middleware.js";
 import { LessonVideoController } from "./lessonVideo.controller.js";
 import { LessonVideoValidation } from "./lessonVideo.validation.js";
 
@@ -8,33 +8,39 @@ const router = express.Router();
 
 router.post(
   "/",
-  auth(),
+  requirePermission("lms.lessonVideo.create"),
   validateRequest(LessonVideoValidation.createZodSchema),
   LessonVideoController.create,
 );
 
 router.get(
   "/",
-  auth(),
+  requirePermission("lms.lessonVideo.read"),
   LessonVideoController.getAll,
 );
 
 router.get(
   "/:id",
-  auth(),
+  requirePermission("lms.lessonVideo.read"),
   LessonVideoController.getById,
+);
+
+router.post(
+  "/:id/heartbeat",
+  requirePermission("lms.lessonVideo.read"),
+  LessonVideoController.recordHeartbeat,
 );
 
 router.patch(
   "/:id",
-  auth(),
+  requirePermission("lms.lessonVideo.update"),
   validateRequest(LessonVideoValidation.updateZodSchema),
   LessonVideoController.update,
 );
 
 router.delete(
   "/:id",
-  auth(),
+  requirePermission("lms.lessonVideo.delete"),
   LessonVideoController.deleteById,
 );
 
