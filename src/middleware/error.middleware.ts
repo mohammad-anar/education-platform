@@ -41,10 +41,19 @@ export const errorHandler = (
   if (err instanceof ZodError) {
     statusCode = StatusCodes.BAD_REQUEST;
     message = "Validation Error";
-    errorMessages = err.issues.map((issue) => ({
-      path: String(issue.path[issue.path.length - 1] ?? "field"),
-      message: issue.message,
-    }));
+    errorMessages = err.issues.map((issue: any) => {
+      const offendingKey =
+        issue.path && issue.path.length > 0
+          ? issue.path[issue.path.length - 1]
+          : issue.keys && issue.keys.length > 0
+            ? issue.keys.join(", ")
+            : "field";
+
+      return {
+        path: String(offendingKey),
+        message: issue.message,
+      };
+    });
   }
 
   // Prisma Known Request Errors
