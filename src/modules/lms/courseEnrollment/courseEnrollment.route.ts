@@ -1,6 +1,6 @@
 import express from "express";
 import validateRequest from "../../../middleware/validate.middleware.js";
-import auth from "../../../middleware/auth.middleware.js";
+import { requirePermission } from "../../../middleware/auth.middleware.js";
 import { CourseEnrollmentController } from "./courseEnrollment.controller.js";
 import { CourseEnrollmentValidation } from "./courseEnrollment.validation.js";
 
@@ -8,34 +8,46 @@ const router = express.Router();
 
 router.post(
   "/",
-  auth(),
+  requirePermission("lms.courseEnrollment.create"),
   validateRequest(CourseEnrollmentValidation.createZodSchema),
   CourseEnrollmentController.create,
 );
 
 router.get(
   "/",
-  auth(),
+  requirePermission("lms.courseEnrollment.read"),
   CourseEnrollmentController.getAll,
 );
 
 router.get(
   "/:id",
-  auth(),
+  requirePermission("lms.courseEnrollment.read"),
   CourseEnrollmentController.getById,
 );
 
 router.patch(
   "/:id",
-  auth(),
+  requirePermission("lms.courseEnrollment.update"),
   validateRequest(CourseEnrollmentValidation.updateZodSchema),
   CourseEnrollmentController.update,
 );
 
 router.delete(
   "/:id",
-  auth(),
+  requirePermission("lms.courseEnrollment.delete"),
   CourseEnrollmentController.deleteById,
+);
+
+router.post(
+  "/restrictions",
+  requirePermission("lms.courseEnrollment.restrict"),
+  CourseEnrollmentController.createRestriction,
+);
+
+router.post(
+  "/restrictions/:restrictionId/revoke",
+  requirePermission("lms.courseEnrollment.revokeRestriction"),
+  CourseEnrollmentController.revokeRestriction,
 );
 
 export const CourseEnrollmentRoutes = router;
