@@ -1,6 +1,6 @@
 import express from "express";
 import validateRequest from "../../../middleware/validate.middleware.js";
-import auth from "../../../middleware/auth.middleware.js";
+import { requirePermission } from "../../../middleware/auth.middleware.js";
 import { GradingController } from "./grading.controller.js";
 import { GradingValidation } from "./grading.validation.js";
 
@@ -8,33 +8,33 @@ const router = express.Router();
 
 router.post(
   "/",
-  auth(),
+  requirePermission("assessment.grading.create"),
   validateRequest(GradingValidation.createZodSchema),
   GradingController.create,
 );
 
 router.get(
   "/",
-  auth(),
+  requirePermission("assessment.grading.read"),
   GradingController.getAll,
 );
 
 router.get(
   "/:id",
-  auth(),
+  requirePermission("assessment.grading.read"),
   GradingController.getById,
 );
 
 router.patch(
   "/:id",
-  auth(),
+  requirePermission("assessment.grading.update"),
   validateRequest(GradingValidation.updateZodSchema),
   GradingController.update,
 );
 
 router.delete(
   "/:id",
-  auth(),
+  requirePermission("assessment.grading.delete"),
   GradingController.deleteById,
 );
 
