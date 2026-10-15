@@ -58,6 +58,38 @@ enum CourseRestrictionType {
   REVOKE_ACCESS
 }
 
+enum PermissionScope {
+  OWN
+  ASSIGNED
+  INSTITUTE
+  ALL
+}
+
+enum OverrideEffect {
+  GRANT
+  DENY
+}
+
+enum StaffType {
+  ADMIN
+  ACCOUNTANT
+  LIBRARIAN
+  SUPPORT
+  SECURITY
+  IT_ADMIN
+  ADMISSION_OFFICER
+  MAINTENANCE
+  OTHER
+}
+
+enum Visibility {
+  HIDDEN
+  ENROLLED_STUDENTS
+  MEMBERS
+  PUBLIC
+}
+
+
 // ==========================================
 // LMS & DIGITAL LEARNING ENUMS
 // ==========================================
@@ -267,6 +299,7 @@ enum NotificationType {
   COURSE
   PAYMENT
   SUBSCRIPTION
+  SUPPORT
   GENERAL
 }
 
@@ -287,6 +320,18 @@ enum NoticeAudienceType {
   ROLE
   USER
 }
+
+enum NoticeCategory {
+  GENERAL
+  ACADEMIC
+  EXAMINATION
+  EVENT
+  EMERGENCY
+  HOLIDAY
+  FEE
+  ADMINISTRATIVE
+}
+
 
 // ==========================================
 // FILE & PLATFORM ASSETS
@@ -354,3 +399,37 @@ enum BillingCycle {
   YEARLY
   CUSTOM
 }
+
+// ==========================================
+// SUPPORT SYSTEM ENUMS
+// ==========================================
+
+enum TicketPriority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+enum TicketStatus {
+  OPEN
+  IN_PROGRESS
+  WAITING_FOR_STUDENT
+  RESOLVED
+  CLOSED
+}
+
+enum SlotStatus {
+  AVAILABLE
+  BOOKED
+  CANCELLED
+}
+
+enum SupportSessionStatus {
+  REQUESTED
+  SCHEDULED
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
