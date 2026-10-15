@@ -1,40 +1,93 @@
 import express from "express";
 import validateRequest from "../../../middleware/validate.middleware.js";
-import auth from "../../../middleware/auth.middleware.js";
+import { requirePermission } from "../../../middleware/auth.middleware.js";
 import { TeacherController } from "./teacher.controller.js";
 import { TeacherValidation } from "./teacher.validation.js";
 
 const router = express.Router();
 
+// -------------------------------------------------------------
+// Self-Service Profile Routes (/me) - Mounted BEFORE /:id
+// -------------------------------------------------------------
+router.get(
+  "/me",
+  requirePermission("people.teacher.read"),
+  TeacherController.getMyProfile,
+);
+
+router.patch(
+  "/me",
+  requirePermission("people.teacher.update"),
+  validateRequest(TeacherValidation.selfUpdateZodSchema),
+  TeacherController.updateMyProfile,
+);
+
+router.post(
+  "/me/photo",
+  requirePermission("people.teacher.update"),
+  validateRequest(TeacherValidation.uploadPhotoZodSchema),
+  TeacherController.uploadProfilePhoto,
+);
+
+router.post(
+  "/me/qualifications",
+  requirePermission("people.teacher.update"),
+  validateRequest(TeacherValidation.addQualificationZodSchema),
+  TeacherController.addQualification,
+);
+
+router.delete(
+  "/me/qualifications/:qualId",
+  requirePermission("people.teacher.update"),
+  TeacherController.removeQualification,
+);
+
+router.patch(
+  "/me/notification-prefs",
+  requirePermission("people.teacher.update"),
+  validateRequest(TeacherValidation.updateNotificationPrefsZodSchema),
+  TeacherController.updateMyNotificationPrefs,
+);
+
+router.patch(
+  "/me/visibility",
+  requirePermission("people.teacher.update"),
+  validateRequest(TeacherValidation.updateVisibilityZodSchema),
+  TeacherController.updateMyVisibility,
+);
+
+// -------------------------------------------------------------
+// Administrative & Directory Routes
+// -------------------------------------------------------------
 router.post(
   "/",
-  auth(),
+  requirePermission("people.teacher.create"),
   validateRequest(TeacherValidation.createZodSchema),
   TeacherController.create,
 );
 
 router.get(
   "/",
-  auth(),
+  requirePermission("people.teacher.read"),
   TeacherController.getAll,
 );
 
 router.get(
   "/:id",
-  auth(),
+  requirePermission("people.teacher.read"),
   TeacherController.getById,
 );
 
 router.patch(
   "/:id",
-  auth(),
-  validateRequest(TeacherValidation.updateZodSchema),
-  TeacherController.update,
+  requirePermission("people.teacher.update"),
+  validateRequest(TeacherValidation.adminUpdateZodSchema),
+  TeacherController.adminUpdateProfile,
 );
 
 router.delete(
   "/:id",
-  auth(),
+  requirePermission("people.teacher.delete"),
   TeacherController.deleteById,
 );
 
