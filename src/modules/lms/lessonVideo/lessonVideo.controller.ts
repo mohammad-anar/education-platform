@@ -5,7 +5,10 @@ import pick from "../../../utils/pick.js";
 import { LessonVideoService } from "./lessonVideo.service.js";
 
 const create = catchAsync(async (req: Request, res: Response) => {
-  const result = await LessonVideoService.create(req.body);
+  if (req.ctx?.instituteId && !req.ctx?.isPlatformAdmin) {
+    req.body.instituteId = req.ctx.instituteId;
+  }
+  const result = await LessonVideoService.create(req.body, req.ctx);
   sendResponse(res, {
     statusCode: 201,
     success: true,
@@ -16,8 +19,11 @@ const create = catchAsync(async (req: Request, res: Response) => {
 
 const getAll = catchAsync(async (req: Request, res: Response) => {
   const filters = pick(req.query, ["searchTerm", "courseId", "moduleId", "lessonId", "studentId", "status"]);
+  if (req.ctx?.instituteId && !req.ctx?.isPlatformAdmin) {
+    (filters as any).instituteId = req.ctx.instituteId;
+  }
   const paginationOptions = pick(req.query, ["page", "limit", "sortBy", "sortOrder"]);
-  const result = await LessonVideoService.getAll(filters, paginationOptions);
+  const result = await LessonVideoService.getAll(filters, paginationOptions, req.ctx);
   sendResponse(res, {
     statusCode: 200,
     success: true,
@@ -29,7 +35,7 @@ const getAll = catchAsync(async (req: Request, res: Response) => {
 
 const getById = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
-  const result = await LessonVideoService.getById(id);
+  const result = await LessonVideoService.getById(id, req.ctx);
   sendResponse(res, {
     statusCode: 200,
     success: true,
@@ -40,7 +46,7 @@ const getById = catchAsync(async (req: Request, res: Response) => {
 
 const update = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
-  const result = await LessonVideoService.update(id, req.body);
+  const result = await LessonVideoService.update(id, req.body, req.ctx);
   sendResponse(res, {
     statusCode: 200,
     success: true,
@@ -51,11 +57,22 @@ const update = catchAsync(async (req: Request, res: Response) => {
 
 const deleteById = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
-  const result = await LessonVideoService.deleteById(id);
+  const result = await LessonVideoService.deleteById(id, req.ctx);
   sendResponse(res, {
     statusCode: 200,
     success: true,
     message: "Lesson Video deleted successfully",
+    data: result,
+  });
+});
+
+const recordHeartbeat = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const result = await LessonVideoService.recordHeartbeat(id, req.body, req.ctx);
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: "Heartbeat recorded successfully",
     data: result,
   });
 });
@@ -66,4 +83,5 @@ export const LessonVideoController = {
   getById,
   update,
   deleteById,
+  recordHeartbeat,
 };
