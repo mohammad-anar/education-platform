@@ -5,7 +5,10 @@ import pick from "../../../utils/pick.js";
 import { CalendarService } from "./calendar.service.js";
 
 const create = catchAsync(async (req: Request, res: Response) => {
-  const result = await CalendarService.create(req.body);
+  if (req.ctx?.instituteId && !req.ctx?.isPlatformAdmin) {
+    req.body.instituteId = req.ctx.instituteId;
+  }
+  const result = await CalendarService.create(req.body, req.ctx);
   sendResponse(res, {
     statusCode: 201,
     success: true,
@@ -25,8 +28,11 @@ const getAll = catchAsync(async (req: Request, res: Response) => {
     "courseId",
     "status",
   ]);
+  if (req.ctx?.instituteId && !req.ctx?.isPlatformAdmin) {
+    (filters as any).instituteId = req.ctx.instituteId;
+  }
   const paginationOptions = pick(req.query, ["page", "limit", "sortBy", "sortOrder"]);
-  const result = await CalendarService.getAll(filters, paginationOptions);
+  const result = await CalendarService.getAll(filters, paginationOptions, req.ctx);
   sendResponse(res, {
     statusCode: 200,
     success: true,
@@ -38,7 +44,7 @@ const getAll = catchAsync(async (req: Request, res: Response) => {
 
 const getById = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
-  const result = await CalendarService.getById(id);
+  const result = await CalendarService.getById(id, req.ctx);
   sendResponse(res, {
     statusCode: 200,
     success: true,
@@ -60,7 +66,7 @@ const generateSessions = catchAsync(async (req: Request, res: Response) => {
 
 const update = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
-  const result = await CalendarService.update(id, req.body);
+  const result = await CalendarService.update(id, req.body, req.ctx);
   sendResponse(res, {
     statusCode: 200,
     success: true,
@@ -71,7 +77,7 @@ const update = catchAsync(async (req: Request, res: Response) => {
 
 const deleteById = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
-  const result = await CalendarService.deleteById(id);
+  const result = await CalendarService.deleteById(id, req.ctx);
   sendResponse(res, {
     statusCode: 200,
     success: true,
