@@ -1,6 +1,6 @@
 import express from "express";
 import validateRequest from "../../../middleware/validate.middleware.js";
-import auth from "../../../middleware/auth.middleware.js";
+import { requirePermission } from "../../../middleware/auth.middleware.js";
 import { LevelController } from "./level.controller.js";
 import { LevelValidation } from "./level.validation.js";
 
@@ -8,33 +8,33 @@ const router = express.Router();
 
 router.post(
   "/",
-  auth(),
+  requirePermission("academic.level.create"),
   validateRequest(LevelValidation.createZodSchema),
   LevelController.create,
 );
 
 router.get(
   "/",
-  auth(),
+  requirePermission("academic.level.read"),
   LevelController.getAll,
 );
 
 router.get(
   "/:id",
-  auth(),
+  requirePermission("academic.level.read"),
   LevelController.getById,
 );
 
 router.patch(
   "/:id",
-  auth(),
+  requirePermission("academic.level.update"),
   validateRequest(LevelValidation.updateZodSchema),
   LevelController.update,
 );
 
 router.delete(
   "/:id",
-  auth(),
+  requirePermission("academic.level.delete"),
   LevelController.deleteById,
 );
 
