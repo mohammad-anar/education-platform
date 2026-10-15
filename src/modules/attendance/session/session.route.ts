@@ -1,6 +1,6 @@
 import express from "express";
 import validateRequest from "../../../middleware/validate.middleware.js";
-import auth from "../../../middleware/auth.middleware.js";
+import { requirePermission } from "../../../middleware/auth.middleware.js";
 import { SessionController } from "./session.controller.js";
 import { SessionValidation } from "./session.validation.js";
 
@@ -8,33 +8,39 @@ const router = express.Router();
 
 router.post(
   "/",
-  auth(),
+  requirePermission("attendance.session.create"),
   validateRequest(SessionValidation.createZodSchema),
   SessionController.create,
 );
 
 router.get(
   "/",
-  auth(),
+  requirePermission("attendance.session.read"),
   SessionController.getAll,
 );
 
 router.get(
   "/:id",
-  auth(),
+  requirePermission("attendance.session.read"),
   SessionController.getById,
+);
+
+router.post(
+  "/:id/mark",
+  requirePermission("attendance.session.update"),
+  SessionController.markAttendance,
 );
 
 router.patch(
   "/:id",
-  auth(),
+  requirePermission("attendance.session.update"),
   validateRequest(SessionValidation.updateZodSchema),
   SessionController.update,
 );
 
 router.delete(
   "/:id",
-  auth(),
+  requirePermission("attendance.session.delete"),
   SessionController.deleteById,
 );
 
