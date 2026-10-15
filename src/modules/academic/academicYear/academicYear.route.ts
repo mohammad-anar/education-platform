@@ -1,6 +1,6 @@
 import express from "express";
 import validateRequest from "../../../middleware/validate.middleware.js";
-import auth from "../../../middleware/auth.middleware.js";
+import { requirePermission } from "../../../middleware/auth.middleware.js";
 import { AcademicYearController } from "./academicYear.controller.js";
 import { AcademicYearValidation } from "./academicYear.validation.js";
 
@@ -8,33 +8,33 @@ const router = express.Router();
 
 router.post(
   "/",
-  auth(),
+  requirePermission("academic.academicYear.create"),
   validateRequest(AcademicYearValidation.createZodSchema),
   AcademicYearController.create,
 );
 
 router.get(
   "/",
-  auth(),
+  requirePermission("academic.academicYear.read"),
   AcademicYearController.getAll,
 );
 
 router.get(
   "/:id",
-  auth(),
+  requirePermission("academic.academicYear.read"),
   AcademicYearController.getById,
 );
 
 router.patch(
   "/:id",
-  auth(),
+  requirePermission("academic.academicYear.update"),
   validateRequest(AcademicYearValidation.updateZodSchema),
   AcademicYearController.update,
 );
 
 router.delete(
   "/:id",
-  auth(),
+  requirePermission("academic.academicYear.delete"),
   AcademicYearController.deleteById,
 );
 
