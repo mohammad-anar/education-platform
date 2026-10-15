@@ -18,6 +18,8 @@ import {
   ISendOtp,
   IVerifyOtp,
 } from "./auth.interface.js";
+import { logAudit, extractAuditContext } from "../../utils/audit.js";
+import { domainEventEmitter, DomainEventType } from "../../events/index.js";
 
 const userSelectedFields = {
   id: true,
@@ -123,7 +125,16 @@ const registerUser = async (payload: IRegisterUser) => {
   return newUser;
 };
 
-const loginUser = async (payload: ILoginUser) => {
+/**
+ * Authenticates a user with email and password credentials, returning tokens and user profile.
+ * Records AuditLog entries on both success and security failures.
+ *
+ * @param {ILoginUser} payload - The user login credentials.
+ * @param {any} [ctx] - Express Request or audit context.
+ * @returns {Promise<{ accessToken: string; refreshToken: string; user: any }>}
+ * @throws {ApiError} 404 if not found, 401 if invalid password, 403 if deleted/suspended.
+ */
+const loginUser = async (payload: ILoginUser, ctx?: any) => {
   const { email, password } = payload;
 
   const user = await prisma.user.findUnique({
@@ -143,10 +154,24 @@ const loginUser = async (payload: ILoginUser) => {
   });
 
   if (!user) {
+    await logAudit({
+      ctx,
+      action: "AUTH_LOGIN_FAILURE",
+      entityType: "User",
+      entityId: null,
+      newValue: { email, reason: "User does not exist" },
+    });
     throw new ApiError(StatusCodes.NOT_FOUND, "User does not exist");
   }
 
   if (user.deletedAt) {
+    await logAudit({
+      ctx,
+      action: "AUTH_LOGIN_FAILURE",
+      entityType: "User",
+      entityId: user.id,
+      newValue: { email, reason: "Account has been deleted" },
+    });
     throw new ApiError(StatusCodes.FORBIDDEN, "Your account has been deleted");
   }
 
@@ -155,6 +180,13 @@ const loginUser = async (payload: ILoginUser) => {
     user.status === UserStatus.LOCKED ||
     user.status === UserStatus.INACTIVE
   ) {
+    await logAudit({
+      ctx,
+      action: "AUTH_LOGIN_FAILURE",
+      entityType: "User",
+      entityId: user.id,
+      newValue: { email, reason: `Account is ${user.status.toLowerCase()}` },
+    });
     throw new ApiError(
       StatusCodes.FORBIDDEN,
       `Your account is ${user.status.toLowerCase()}`,
@@ -162,11 +194,25 @@ const loginUser = async (payload: ILoginUser) => {
   }
 
   if (!user.passwordHash) {
+    await logAudit({
+      ctx,
+      action: "AUTH_LOGIN_FAILURE",
+      entityType: "User",
+      entityId: user.id,
+      newValue: { email, reason: "Password not configured" },
+    });
     throw new ApiError(StatusCodes.UNAUTHORIZED, "Password not configured for this user");
   }
 
   const isPasswordMatched = await cryptoHelper.comparePassword(password, user.passwordHash);
   if (!isPasswordMatched) {
+    await logAudit({
+      ctx,
+      action: "AUTH_LOGIN_FAILURE",
+      entityType: "User",
+      entityId: user.id,
+      newValue: { email, reason: "Invalid password" },
+    });
     throw new ApiError(StatusCodes.UNAUTHORIZED, "Invalid password");
   }
 
@@ -199,6 +245,46 @@ const loginUser = async (payload: ILoginUser) => {
   );
 
   const { passwordHash: _, ...userData } = user;
+
+  const defaultInstituteId = user.memberships?.[0]?.institute?.id || null;
+  const auditCtx = extractAuditContext(ctx);
+
+  // Register active user session
+  await (prisma as any).userSession
+    .create({
+      data: {
+        userId: user.id,
+        token: accessToken,
+        ipAddress: auditCtx.ipAddress || null,
+        userAgent: auditCtx.userAgent || null,
+        expiresAt: new Date(Date.now() + 7 * 24 * 3600 * 1000),
+      },
+    })
+    .catch(() => {});
+
+  await logAudit({
+    ctx: {
+      ...auditCtx,
+      instituteId: auditCtx.instituteId || defaultInstituteId,
+      userId: user.id,
+    },
+    action: "AUTH_LOGIN_SUCCESS",
+    entityType: "User",
+    entityId: user.id,
+    newValue: { email: user.email, roles },
+  });
+
+  // Emit Domain Event
+  domainEventEmitter
+    .emitEvent({
+      instituteId: defaultInstituteId,
+      actorId: user.id,
+      eventType: DomainEventType.LOGIN,
+      entityType: "User",
+      entityId: user.id,
+      properties: { email: user.email, roles },
+    })
+    .catch(() => {});
 
   return {
     accessToken,
@@ -265,13 +351,49 @@ const refreshToken = async (payload: IRefreshToken) => {
   };
 };
 
-const logout = async (tokenWithBearer: string) => {
+/**
+ * Logs out a user by invalidating their JWT bearer token in Redis cache.
+ * Records AuditLog entry for the logout action.
+ *
+ * @param {string} tokenWithBearer - The Bearer token header string.
+ * @param {any} [ctx] - Express Request or audit context.
+ * @returns {Promise<{ message: string }>}
+ */
+const logout = async (tokenWithBearer: string, ctx?: any) => {
   if (!tokenWithBearer) return { message: "Logged out successfully" };
   const token = tokenWithBearer.startsWith("Bearer ")
     ? tokenWithBearer.split(" ")[1]
     : tokenWithBearer;
 
+  let tokenUserId: string | null = null;
+  try {
+    const decoded: any = jwtHelper.verifyToken(token, env.jwt.jwt_secret as Secret);
+    tokenUserId = decoded?.id || null;
+  } catch {
+    // expired or invalid token - fallback to context user
+  }
+
+  const auditCtx = extractAuditContext(ctx);
+  const targetUserId = tokenUserId || auditCtx.userId || null;
+
   await cacheHelper.blacklistToken(token, 86400);
+
+  // Mark session revoked in database
+  await (prisma as any).userSession
+    .updateMany({
+      where: { token },
+      data: { isRevoked: true },
+    })
+    .catch(() => {});
+
+  await logAudit({
+    ctx,
+    action: "AUTH_LOGOUT",
+    entityType: "User",
+    entityId: targetUserId,
+    newValue: { status: "LOGGED_OUT" },
+  });
+
   return { message: "Logged out successfully" };
 };
 
@@ -323,7 +445,17 @@ const verifyOtp = async (payload: IVerifyOtp) => {
   };
 };
 
-const changePassword = async (userId: string, payload: IChangePassword) => {
+/**
+ * Changes a user's password after validating their current password.
+ * Records AuditLog entry for password change with sensitive fields masked.
+ *
+ * @param {string} userId - The user ID whose password is to be changed.
+ * @param {IChangePassword} payload - Object containing old and new passwords.
+ * @param {any} [ctx] - Express Request or audit context.
+ * @returns {Promise<{ message: string }>}
+ * @throws {ApiError} 404 if user not found, 401 if old password is incorrect.
+ */
+const changePassword = async (userId: string, payload: IChangePassword, ctx?: any) => {
   const user = await prisma.user.findUnique({
     where: { id: userId },
   });
@@ -337,6 +469,13 @@ const changePassword = async (userId: string, payload: IChangePassword) => {
     user.passwordHash,
   );
   if (!isPasswordMatched) {
+    await logAudit({
+      ctx,
+      action: "AUTH_CHANGE_PASSWORD_FAILURE",
+      entityType: "User",
+      entityId: userId,
+      newValue: { reason: "Incorrect old password" },
+    });
     throw new ApiError(StatusCodes.UNAUTHORIZED, "Incorrect old password");
   }
 
@@ -347,6 +486,14 @@ const changePassword = async (userId: string, payload: IChangePassword) => {
     data: {
       passwordHash: newHashedPassword,
     },
+  });
+
+  await logAudit({
+    ctx,
+    action: "AUTH_CHANGE_PASSWORD",
+    entityType: "User",
+    entityId: userId,
+    newValue: { changed: true },
   });
 
   return { message: "Password changed successfully" };
