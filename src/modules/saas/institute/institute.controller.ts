@@ -38,20 +38,24 @@ const getById = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+/**
+ * @deprecated Superseded by GET /api/v1/dashboard/admin (Role Dashboards)
+ */
 const getStats = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
   const result = await InstituteService.getStats(id);
+  res.setHeader("Warning", '299 - "Deprecated API: use GET /api/v1/dashboard/admin instead"');
   sendResponse(res, {
     statusCode: 200,
     success: true,
-    message: "Institute analytics and stats retrieved successfully",
+    message: "Institute analytics and stats retrieved successfully (Deprecated: use GET /api/v1/dashboard/admin)",
     data: result,
   });
 });
 
 const update = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
-  const result = await InstituteService.update(id, req.body);
+  const result = await InstituteService.update(id, req.body, req);
   sendResponse(res, {
     statusCode: 200,
     success: true,
@@ -71,9 +75,21 @@ const updateSettings = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const suspend = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const { reason } = req.body;
+  const result = await InstituteService.suspend(id, reason, req);
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: "Institute suspended successfully",
+    data: result,
+  });
+});
+
 const deleteById = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
-  const result = await InstituteService.deleteById(id);
+  const result = await InstituteService.deleteById(id, req);
   sendResponse(res, {
     statusCode: 200,
     success: true,
@@ -89,5 +105,6 @@ export const InstituteController = {
   getStats,
   update,
   updateSettings,
+  suspend,
   deleteById,
 };
