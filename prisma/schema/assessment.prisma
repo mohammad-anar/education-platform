@@ -134,6 +134,9 @@ model Assessment {
 
   startAt            DateTime?
   endAt              DateTime?
+  opensAt            DateTime?
+  closesAt           DateTime?
+  dueAt              DateTime?
   durationMinutes    Int?
 
   status             AssessmentStatus   @default(DRAFT)
@@ -222,6 +225,8 @@ model Assignment {
 
   startAt             DateTime?
   dueAt               DateTime?
+  opensAt             DateTime?
+  closesAt            DateTime?
 
   allowLateSubmission Boolean                @default(false)
   maxAttempts         Int                    @default(1)
@@ -240,6 +245,7 @@ model AssignmentSubmission {
 
   assignmentId String                     @db.Uuid
   studentId    String                     @db.Uuid
+  instituteId  String                     @db.Uuid
 
   attempt      Int                        @default(1)
   submittedAt  DateTime?
@@ -257,9 +263,11 @@ model AssignmentSubmission {
 
   assignment   Assignment                 @relation(fields: [assignmentId], references: [id], onDelete: Cascade)
   student      Student                    @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  institute    Institute                  @relation(fields: [instituteId], references: [id], onDelete: Cascade)
 
   @@unique([assignmentId, studentId, attempt])
   @@map("assignment_submissions")
+  @@index([instituteId, studentId])
   @@index([studentId])
 }
 
@@ -344,6 +352,7 @@ model ExamMark {
   examId          String        @db.Uuid
   examComponentId String        @db.Uuid
   studentId       String        @db.Uuid
+  instituteId     String        @db.Uuid
 
   marks           Decimal       @db.Decimal(10, 2)
 
@@ -360,9 +369,11 @@ model ExamMark {
   exam            Exam          @relation(fields: [examId], references: [id], onDelete: Cascade)
   examComponent   ExamComponent @relation(fields: [examComponentId], references: [id], onDelete: Restrict)
   student         Student       @relation(fields: [studentId], references: [id], onDelete: Restrict)
+  institute       Institute     @relation(fields: [instituteId], references: [id], onDelete: Cascade)
 
   @@unique([examComponentId, studentId])
   @@map("exam_marks")
+  @@index([instituteId, studentId])
   @@index([studentId, examId])
 }
 
