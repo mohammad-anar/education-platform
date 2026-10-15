@@ -9,8 +9,10 @@ model Notice {
 
   title       String
   content     String
-
+  category    NoticeCategory   @default(GENERAL)
   priority    Int              @default(0)
+  pinned      Boolean          @default(false)
+  attachments Json?
 
   publishAt   DateTime?
   expiresAt   DateTime?
@@ -20,12 +22,16 @@ model Notice {
 
   createdAt   DateTime         @default(now())
   updatedAt   DateTime         @updatedAt
+  deletedAt   DateTime?
 
   institute   Institute        @relation(fields: [instituteId], references: [id], onDelete: Cascade)
   audiences   NoticeAudience[]
+  reads       NoticeRead[]
 
   @@map("notices")
   @@index([instituteId, publishAt])
+  @@index([instituteId, pinned])
+  @@index([instituteId, status, publishAt])
 }
 
 model NoticeAudience {
@@ -42,26 +48,44 @@ model NoticeAudience {
   @@index([noticeId])
 }
 
+model NoticeRead {
+  id        String    @id @default(uuid()) @db.Uuid
+  noticeId  String    @db.Uuid
+  userId    String    @db.Uuid
+  readAt    DateTime  @default(now())
+
+  notice    Notice    @relation(fields: [noticeId], references: [id], onDelete: Cascade)
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([noticeId, userId])
+  @@index([userId, readAt])
+  @@index([noticeId])
+  @@map("notice_reads")
+}
+
 model Notification {
   id        String              @id @default(uuid()) @db.Uuid
 
-  userId    String              @db.Uuid
+  userId      String              @db.Uuid
+  instituteId String?             @db.Uuid
 
-  type      NotificationType
-  title     String
-  message   String
+  type        NotificationType
+  title       String
+  message     String
 
-  channel   NotificationChannel @default(IN_APP)
-  readAt    DateTime?
-  data      Json?
+  channel     NotificationChannel @default(IN_APP)
+  readAt      DateTime?
+  data        Json?
 
-  createdAt DateTime            @default(now())
+  createdAt   DateTime            @default(now())
 
-  user      User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user        User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  institute   Institute?          @relation(fields: [instituteId], references: [id], onDelete: Cascade)
 
   @@map("notifications")
   @@index([userId, readAt])
   @@index([userId, createdAt])
+  @@index([instituteId, createdAt])
   @@index([createdAt])
 }
 
@@ -94,6 +118,12 @@ model FileAsset {
   institute       Institute        @relation(fields: [instituteId], references: [id], onDelete: Cascade)
   lessonResources LessonResource[]
   lessonVideos    LessonVideo[]
+  studentPhotos   Student[]        @relation("StudentPhotoAsset")
+  teacherPhotos   TeacherProfile[] @relation("TeacherPhotoAsset")
+  staffPhotos     StaffProfile[]   @relation("StaffPhotoAsset")
+  studentDocuments StudentDocument[]
+  teacherQualifications TeacherQualification[]
+  staffDocuments   StaffDocument[]
 
   @@map("file_assets")
   @@index([instituteId])
@@ -181,4 +211,28 @@ model AuditLog {
   @@index([entityType, entityId])
   @@index([userId, createdAt])
   @@index([requestId])
+}
+
+model AnalyticsEvent {
+  id          String     @id @default(uuid()) @db.Uuid
+
+  instituteId String?    @db.Uuid
+  actorId     String?    @db.Uuid
+
+  eventType   String
+  entityType  String?
+  entityId    String?
+
+  properties  Json?
+  occurredAt  DateTime   @default(now())
+  createdAt   DateTime   @default(now())
+
+  institute   Institute? @relation(fields: [instituteId], references: [id], onDelete: Cascade)
+  actor       User?      @relation("AnalyticsEventActor", fields: [actorId], references: [id], onDelete: SetNull)
+
+  @@map("analytics_events")
+  @@index([instituteId, eventType, occurredAt])
+  @@index([actorId, occurredAt])
+  @@index([eventType, occurredAt])
+  @@index([entityType, entityId])
 }
