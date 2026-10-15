@@ -14,3 +14,4 @@ export * from "./prismaHelper.js";
 export * from "./generateOTP.js";
 export * from "./getFilePath.js";
 export * from "./seedSuperAdmin.js";
+export * from "./audit.js";
