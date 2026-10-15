@@ -14,7 +14,18 @@ export const validateRequest =
         }
       }
 
-      await schema.parseAsync(parsedBody);
+      const hasBodyKey = (schema as any)?.shape && "body" in (schema as any).shape;
+      if (hasBodyKey && !(parsedBody && "body" in parsedBody)) {
+        await schema.parseAsync({
+          body: parsedBody,
+          query: req.query,
+          params: req.params,
+          cookies: req.cookies,
+        });
+      } else {
+        await schema.parseAsync(parsedBody);
+      }
+
       req.body = parsedBody;
       return next();
     } catch (error) {
