@@ -93,12 +93,38 @@ const getStats = async (id: string) => {
   };
 };
 
-const update = async (id: string, payload: any) => {
-  return prisma.institute.update({
+import { logAudit } from "../../../utils/audit.js";
+
+/**
+ * Updates an institute and logs audit entries for updates and suspensions.
+ *
+ * @param {string} id - The institute ID.
+ * @param {any} payload - The update fields.
+ * @param {any} [ctx] - Express Request or audit context.
+ * @returns {Promise<any>}
+ */
+const update = async (id: string, payload: any, ctx?: any) => {
+  const oldInstitute = await prisma.institute.findUnique({
+    where: { id },
+  });
+
+  const result = await prisma.institute.update({
     where: { id },
     data: payload,
     include: { settings: true },
   });
+
+  const isSuspension = payload.status === "INACTIVE" && oldInstitute?.status === "ACTIVE";
+  await logAudit({
+    ctx,
+    action: isSuspension ? "INSTITUTE_SUSPEND" : "INSTITUTE_UPDATE",
+    entityType: "Institute",
+    entityId: id,
+    oldValue: oldInstitute,
+    newValue: result,
+  });
+
+  return result;
 };
 
 const updateSettings = async (id: string, settingsPayload: any) => {
@@ -112,10 +138,65 @@ const updateSettings = async (id: string, settingsPayload: any) => {
   });
 };
 
-const deleteById = async (id: string) => {
-  return prisma.institute.delete({
+/**
+ * Suspends an institute by marking it INACTIVE and records an INSTITUTE_SUSPEND audit log entry.
+ *
+ * @param {string} id - The institute ID.
+ * @param {string} [reason] - Reason for suspension.
+ * @param {any} [ctx] - Express Request or audit context.
+ * @returns {Promise<any>}
+ */
+const suspend = async (id: string, reason?: string, ctx?: any) => {
+  const oldInstitute = await prisma.institute.findUnique({
     where: { id },
   });
+
+  const result = await prisma.institute.update({
+    where: { id },
+    data: {
+      status: "INACTIVE",
+    },
+    include: { settings: true },
+  });
+
+  await logAudit({
+    ctx,
+    action: "INSTITUTE_SUSPEND",
+    entityType: "Institute",
+    entityId: id,
+    oldValue: oldInstitute,
+    newValue: { status: "INACTIVE", reason: reason || null },
+  });
+
+  return result;
+};
+
+/**
+ * Deletes an institute and records an INSTITUTE_DELETE audit log entry.
+ *
+ * @param {string} id - The institute ID.
+ * @param {any} [ctx] - Express Request or audit context.
+ * @returns {Promise<any>}
+ */
+const deleteById = async (id: string, ctx?: any) => {
+  const oldInstitute = await prisma.institute.findUnique({
+    where: { id },
+  });
+
+  const result = await prisma.institute.delete({
+    where: { id },
+  });
+
+  await logAudit({
+    ctx,
+    action: "INSTITUTE_DELETE",
+    entityType: "Institute",
+    entityId: id,
+    oldValue: oldInstitute,
+    newValue: null,
+  });
+
+  return result;
 };
 
 export const InstituteService = {
@@ -125,5 +206,6 @@ export const InstituteService = {
   getStats,
   update,
   updateSettings,
+  suspend,
   deleteById,
 };
