@@ -5,7 +5,10 @@ import pick from "../../../utils/pick.js";
 import { CourseService } from "./course.service.js";
 
 const create = catchAsync(async (req: Request, res: Response) => {
-  const result = await CourseService.create(req.body);
+  if (req.ctx?.instituteId && !req.ctx?.isPlatformAdmin) {
+    req.body.instituteId = req.ctx.instituteId;
+  }
+  const result = await CourseService.create(req.body, req.ctx);
   sendResponse(res, {
     statusCode: 201,
     success: true,
@@ -16,8 +19,11 @@ const create = catchAsync(async (req: Request, res: Response) => {
 
 const getAll = catchAsync(async (req: Request, res: Response) => {
   const filters = pick(req.query, ["searchTerm", "instituteId", "subjectId", "status", "isPublic"]);
+  if (req.ctx?.instituteId && !req.ctx?.isPlatformAdmin) {
+    (filters as any).instituteId = req.ctx.instituteId;
+  }
   const paginationOptions = pick(req.query, ["page", "limit", "sortBy", "sortOrder"]);
-  const result = await CourseService.getAll(filters, paginationOptions);
+  const result = await CourseService.getAll(filters, paginationOptions, req.ctx);
   sendResponse(res, {
     statusCode: 200,
     success: true,
@@ -29,7 +35,7 @@ const getAll = catchAsync(async (req: Request, res: Response) => {
 
 const getById = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
-  const result = await CourseService.getById(id);
+  const result = await CourseService.getById(id, req.ctx);
   sendResponse(res, {
     statusCode: 200,
     success: true,
@@ -38,20 +44,24 @@ const getById = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+/**
+ * @deprecated Superseded by GET /api/v1/dashboard/teacher/course-completion-funnel or admin LMS analytics
+ */
 const getStats = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
-  const result = await CourseService.getStats(id);
+  const result = await CourseService.getStats(id, req.ctx);
+  res.setHeader("Warning", '299 - "Deprecated API: use teacher course funnel or admin LMS analytics instead"');
   sendResponse(res, {
     statusCode: 200,
     success: true,
-    message: "Course analytics & enrollment stats retrieved successfully",
+    message: "Course analytics & enrollment stats retrieved successfully (Deprecated: use teacher or admin dashboard)",
     data: result,
   });
 });
 
 const update = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
-  const result = await CourseService.update(id, req.body);
+  const result = await CourseService.update(id, req.body, req.ctx);
   sendResponse(res, {
     statusCode: 200,
     success: true,
@@ -62,7 +72,7 @@ const update = catchAsync(async (req: Request, res: Response) => {
 
 const deleteById = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
-  const result = await CourseService.deleteById(id);
+  const result = await CourseService.deleteById(id, req.ctx);
   sendResponse(res, {
     statusCode: 200,
     success: true,
