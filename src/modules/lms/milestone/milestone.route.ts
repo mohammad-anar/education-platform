@@ -1,6 +1,6 @@
 import express from "express";
 import validateRequest from "../../../middleware/validate.middleware.js";
-import auth from "../../../middleware/auth.middleware.js";
+import { requirePermission } from "../../../middleware/auth.middleware.js";
 import { MilestoneController } from "./milestone.controller.js";
 import { MilestoneValidation } from "./milestone.validation.js";
 
@@ -8,33 +8,33 @@ const router = express.Router();
 
 router.post(
   "/",
-  auth(),
+  requirePermission("lms.milestone.create"),
   validateRequest(MilestoneValidation.createZodSchema),
   MilestoneController.create,
 );
 
 router.get(
   "/",
-  auth(),
+  requirePermission("lms.milestone.read"),
   MilestoneController.getAll,
 );
 
 router.get(
   "/:id",
-  auth(),
+  requirePermission("lms.milestone.read"),
   MilestoneController.getById,
 );
 
 router.patch(
   "/:id",
-  auth(),
+  requirePermission("lms.milestone.update"),
   validateRequest(MilestoneValidation.updateZodSchema),
   MilestoneController.update,
 );
 
 router.delete(
   "/:id",
-  auth(),
+  requirePermission("lms.milestone.delete"),
   MilestoneController.deleteById,
 );
 
