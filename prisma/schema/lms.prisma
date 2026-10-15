@@ -74,6 +74,7 @@ model CourseEnrollment {
 
   studentId       String           @db.Uuid
   courseId        String           @db.Uuid
+  instituteId     String           @db.Uuid
 
   enrolledAt      DateTime         @default(now())
   startDate       DateTime?
@@ -88,6 +89,7 @@ model CourseEnrollment {
 
   student         Student          @relation(fields: [studentId], references: [id], onDelete: Cascade)
   course          Course           @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  institute       Institute        @relation(fields: [instituteId], references: [id], onDelete: Cascade)
 
   milestoneProgress MilestoneProgress[]
   moduleProgress    ModuleProgress[]
@@ -97,6 +99,7 @@ model CourseEnrollment {
   @@unique([studentId, courseId])
   @@map("course_enrollments")
   @@index([courseId, status])
+  @@index([instituteId, status])
   @@index([studentId])
 }
 
@@ -478,6 +481,7 @@ model LearningItemProgress {
 
   enrollmentId    String                 @db.Uuid
   learningItemId  String                 @db.Uuid
+  instituteId     String                 @db.Uuid
 
   status          LearningProgressStatus @default(NOT_STARTED)
   progressPercent Decimal                @default(0) @db.Decimal(5, 2)
@@ -493,10 +497,12 @@ model LearningItemProgress {
 
   enrollment      CourseEnrollment       @relation(fields: [enrollmentId], references: [id], onDelete: Cascade)
   learningItem    LearningItem           @relation(fields: [learningItemId], references: [id], onDelete: Cascade)
+  institute       Institute              @relation(fields: [instituteId], references: [id], onDelete: Cascade)
 
   @@unique([enrollmentId, learningItemId])
   @@map("learning_item_progress")
   @@index([enrollmentId, status])
+  @@index([instituteId, status])
   @@index([learningItemId])
 }
 
