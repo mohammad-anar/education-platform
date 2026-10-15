@@ -15,7 +15,7 @@ const registerUser = catchAsync(async (req: Request, res: Response) => {
 });
 
 const loginUser = catchAsync(async (req: Request, res: Response) => {
-  const result = await AuthServices.loginUser(req.body);
+  const result = await AuthServices.loginUser(req.body, req);
   sendResponse(res, {
     statusCode: StatusCodes.OK,
     success: true,
@@ -36,7 +36,7 @@ const refreshToken = catchAsync(async (req: Request, res: Response) => {
 
 const logoutUser = catchAsync(async (req: Request, res: Response) => {
   const token = req.headers.authorization || "";
-  const result = await AuthServices.logout(token);
+  const result = await AuthServices.logout(token, req);
   sendResponse(res, {
     statusCode: StatusCodes.OK,
     success: true,
@@ -67,7 +67,7 @@ const verifyOtp = catchAsync(async (req: Request, res: Response) => {
 
 const changePassword = catchAsync(async (req: Request, res: Response) => {
   const user = req.user;
-  const result = await AuthServices.changePassword(user.id, req.body);
+  const result = await AuthServices.changePassword(user.id, req.body, req);
   sendResponse(res, {
     statusCode: StatusCodes.OK,
     success: true,
