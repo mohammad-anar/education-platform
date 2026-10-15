@@ -1,6 +1,6 @@
 import express from "express";
 import validateRequest from "../../../middleware/validate.middleware.js";
-import auth from "../../../middleware/auth.middleware.js";
+import { requirePermission } from "../../../middleware/auth.middleware.js";
 import { CalendarController } from "./calendar.controller.js";
 import { CalendarValidation } from "./calendar.validation.js";
 
@@ -8,39 +8,39 @@ const router = express.Router();
 
 router.post(
   "/",
-  auth(),
+  requirePermission("attendance.calendar.create"),
   validateRequest(CalendarValidation.createZodSchema),
   CalendarController.create,
 );
 
 router.get(
   "/",
-  auth(),
+  requirePermission("attendance.calendar.read"),
   CalendarController.getAll,
 );
 
 router.post(
   "/:id/generate-sessions",
-  auth(),
+  requirePermission("attendance.calendar.generateSessions"),
   CalendarController.generateSessions,
 );
 
 router.get(
   "/:id",
-  auth(),
+  requirePermission("attendance.calendar.read"),
   CalendarController.getById,
 );
 
 router.patch(
   "/:id",
-  auth(),
+  requirePermission("attendance.calendar.update"),
   validateRequest(CalendarValidation.updateZodSchema),
   CalendarController.update,
 );
 
 router.delete(
   "/:id",
-  auth(),
+  requirePermission("attendance.calendar.delete"),
   CalendarController.deleteById,
 );
 
