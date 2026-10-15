@@ -6,6 +6,9 @@ import { connectRedis, redisClient } from "./config/redis.js";
 import { seedSuperAdmin } from "./utils/seedSuperAdmin.js";
 import prisma from "./config/prisma.js";
 import logger from "./utils/logger.js";
+import { scheduleRepeatableJobs } from "./jobs/schedulers.js";
+import { stopAllWorkers } from "./workers/index.js";
+import { domainEventEmitter } from "./events/index.js";
 
 let server: Server;
 
@@ -18,6 +21,11 @@ async function bootstrap() {
   try {
     // Connect to Redis
     await connectRedis();
+
+    // Schedule repeatable BullMQ jobs (attendance rollup, expiry notice, overdue alerts)
+    await scheduleRepeatableJobs().catch((err) => {
+      logger.warn(`Could not initialize repeatable BullMQ jobs: ${err.message}`);
+    });
 
     // Seed default super admin
     await seedSuperAdmin();
@@ -43,6 +51,22 @@ const gracefulShutdown = async (signal: string) => {
   if (server) {
     server.close(async () => {
       logger.info("HTTP server closed.");
+
+      // Flush any buffered video heartbeats
+      try {
+        await domainEventEmitter.flushVideoHeartbeats();
+        logger.info("Video heartbeats flushed.");
+      } catch (e: any) {
+        logger.error("Error flushing video heartbeats:", e.message);
+      }
+
+      // Stop BullMQ workers
+      try {
+        await stopAllWorkers();
+        logger.info("BullMQ workers stopped.");
+      } catch (e: any) {
+        logger.error("Error stopping BullMQ workers:", e.message);
+      }
 
       // Disconnect Redis
       try {
