@@ -62,11 +62,71 @@ model User {
   // System Activity
   notifications    Notification[]
   auditLogs        AuditLog[]
+  permissionOverrides        UserPermissionOverride[]     @relation("UserPermissionOverrides")
+  createdPermissionOverrides UserPermissionOverride[]     @relation("UserPermissionOverridesCreatedBy")
+  verifiedStudentDocs        StudentDocument[]            @relation("StudentDocVerifiedBy")
+  verifiedTeacherQuals       TeacherQualification[]       @relation("TeacherQualVerifiedBy")
+  verifiedStaffDocs          StaffDocument[]              @relation("StaffDocVerifiedBy")
+
+  // Support System
+  assignedSupportTickets     SupportTicket[]              @relation("AssignedSupportTickets")
+  supportTicketMessages      SupportTicketMessage[]
+  supportAvailabilitySlots   SupportAvailabilitySlot[]
+  hostedSupportSessions      SupportSession[]             @relation("HostedSupportSessions")
+
+  // Notice System
+  noticeReads                NoticeRead[]
+
+  // Security & Settings
+  twoFactorSecret            String?
+  twoFactorBackupCodes       String[]                     @default([])
+  settings                   UserSetting?
+  sessions                   UserSession[]
+
+  // Events & Analytics
+  analyticsEvents            AnalyticsEvent[]             @relation("AnalyticsEventActor")
 
   @@map("users")
   @@index([status])
   @@index([email])
   @@index([phone])
+}
+
+model UserSetting {
+  id                String   @id @default(uuid()) @db.Uuid
+  userId            String   @unique @db.Uuid
+  language          String   @default("en")
+  theme             String   @default("SYSTEM")
+  timezone          String   @default("UTC")
+  notificationPrefs Json?
+
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_settings")
+  @@index([userId])
+}
+
+model UserSession {
+  id           String    @id @default(uuid()) @db.Uuid
+  userId       String    @db.Uuid
+  token        String?   @db.Text
+  ipAddress    String?
+  userAgent    String?
+  device       String?
+  isRevoked    Boolean   @default(false)
+  expiresAt    DateTime?
+  lastActiveAt DateTime  @default(now())
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_sessions")
+  @@index([userId])
+  @@index([isRevoked])
 }
 
 model Role {
@@ -103,18 +163,21 @@ model Permission {
 
   createdAt   DateTime @default(now())
 
-  roles       RolePermission[]
+  roles         RolePermission[]
+  userOverrides UserPermissionOverride[]
 
   @@unique([resource, action])
   @@map("permissions")
 }
 
 model RolePermission {
-  roleId       String     @db.Uuid
-  permissionId String     @db.Uuid
+  roleId       String          @db.Uuid
+  permissionId String          @db.Uuid
 
-  role         Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
-  permission   Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+  scope        PermissionScope @default(OWN)
+
+  role         Role            @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  permission   Permission      @relation(fields: [permissionId], references: [id], onDelete: Cascade)
 
   @@id([roleId, permissionId])
   @@map("role_permissions")
@@ -151,4 +214,31 @@ model InstituteMembership {
   @@map("institute_memberships")
   @@index([userId])
   @@index([instituteId, status])
+}
+
+model UserPermissionOverride {
+  id           String          @id @default(uuid()) @db.Uuid
+
+  instituteId  String          @db.Uuid
+  userId       String          @db.Uuid
+  permissionId String          @db.Uuid
+
+  effect       OverrideEffect
+  scope        PermissionScope @default(OWN)
+
+  expiresAt    DateTime?
+  reason       String?
+  createdById  String?         @db.Uuid
+
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
+
+  institute    Institute       @relation(fields: [instituteId], references: [id], onDelete: Cascade)
+  user         User            @relation("UserPermissionOverrides", fields: [userId], references: [id], onDelete: Cascade)
+  permission   Permission      @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+  createdBy    User?           @relation("UserPermissionOverridesCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
+
+  @@unique([instituteId, userId, permissionId])
+  @@index([instituteId, userId])
+  @@map("user_permission_overrides")
 }
