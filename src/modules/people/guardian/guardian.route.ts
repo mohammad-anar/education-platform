@@ -1,6 +1,6 @@
 import express from "express";
 import validateRequest from "../../../middleware/validate.middleware.js";
-import auth from "../../../middleware/auth.middleware.js";
+import { requirePermission } from "../../../middleware/auth.middleware.js";
 import { GuardianController } from "./guardian.controller.js";
 import { GuardianValidation } from "./guardian.validation.js";
 
@@ -8,33 +8,33 @@ const router = express.Router();
 
 router.post(
   "/",
-  auth(),
+  requirePermission("people.guardian.create"),
   validateRequest(GuardianValidation.createZodSchema),
   GuardianController.create,
 );
 
 router.get(
   "/",
-  auth(),
+  requirePermission("people.guardian.read"),
   GuardianController.getAll,
 );
 
 router.get(
   "/:id",
-  auth(),
+  requirePermission("people.guardian.read"),
   GuardianController.getById,
 );
 
 router.patch(
   "/:id",
-  auth(),
+  requirePermission("people.guardian.update"),
   validateRequest(GuardianValidation.updateZodSchema),
   GuardianController.update,
 );
 
 router.delete(
   "/:id",
-  auth(),
+  requirePermission("people.guardian.delete"),
   GuardianController.deleteById,
 );
 
