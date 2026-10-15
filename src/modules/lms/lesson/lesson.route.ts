@@ -1,6 +1,6 @@
 import express from "express";
 import validateRequest from "../../../middleware/validate.middleware.js";
-import auth from "../../../middleware/auth.middleware.js";
+import { requirePermission } from "../../../middleware/auth.middleware.js";
 import { LessonController } from "./lesson.controller.js";
 import { LessonValidation } from "./lesson.validation.js";
 
@@ -8,33 +8,33 @@ const router = express.Router();
 
 router.post(
   "/",
-  auth(),
+  requirePermission("lms.lesson.create"),
   validateRequest(LessonValidation.createZodSchema),
   LessonController.create,
 );
 
 router.get(
   "/",
-  auth(),
+  requirePermission("lms.lesson.read"),
   LessonController.getAll,
 );
 
 router.get(
   "/:id",
-  auth(),
+  requirePermission("lms.lesson.read"),
   LessonController.getById,
 );
 
 router.patch(
   "/:id",
-  auth(),
+  requirePermission("lms.lesson.update"),
   validateRequest(LessonValidation.updateZodSchema),
   LessonController.update,
 );
 
 router.delete(
   "/:id",
-  auth(),
+  requirePermission("lms.lesson.delete"),
   LessonController.deleteById,
 );
 
