@@ -1,6 +1,6 @@
 import express from "express";
 import validateRequest from "../../../middleware/validate.middleware.js";
-import auth from "../../../middleware/auth.middleware.js";
+import { requirePermission } from "../../../middleware/auth.middleware.js";
 import { LessonNoteController } from "./lessonNote.controller.js";
 import { LessonNoteValidation } from "./lessonNote.validation.js";
 
@@ -8,33 +8,33 @@ const router = express.Router();
 
 router.post(
   "/",
-  auth(),
+  requirePermission("lms.lessonNote.create"),
   validateRequest(LessonNoteValidation.createZodSchema),
   LessonNoteController.create,
 );
 
 router.get(
   "/",
-  auth(),
+  requirePermission("lms.lessonNote.read"),
   LessonNoteController.getAll,
 );
 
 router.get(
   "/:id",
-  auth(),
+  requirePermission("lms.lessonNote.read"),
   LessonNoteController.getById,
 );
 
 router.patch(
   "/:id",
-  auth(),
+  requirePermission("lms.lessonNote.update"),
   validateRequest(LessonNoteValidation.updateZodSchema),
   LessonNoteController.update,
 );
 
 router.delete(
   "/:id",
-  auth(),
+  requirePermission("lms.lessonNote.delete"),
   LessonNoteController.deleteById,
 );
 
