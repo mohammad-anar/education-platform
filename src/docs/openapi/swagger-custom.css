@@ -1,0 +1,305 @@
+/* Multi-Tenant Education Platform - Custom Swagger UI Styles */
+
+/* 1. Global Font and Container Improvements */
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
+}
+
+.swagger-ui .topbar {
+  background-color: #0f172a !important;
+  border-bottom: 2px solid #3b82f6;
+  padding: 10px 0;
+}
+
+.swagger-ui .topbar a {
+  max-width: 350px;
+  font-weight: 700;
+  color: #f8fafc !important;
+}
+
+/* 2. Multi-Tenant Auth Control Toolbar */
+#swagger-custom-toolbar {
+  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+  border: 1px solid #334155;
+  border-radius: 12px;
+  margin: 16px auto;
+  max-width: 1460px;
+  padding: 16px 20px;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3), 0 8px 10px -6px rgba(0, 0, 0, 0.2);
+  color: #f1f5f9;
+}
+
+.sct-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.sct-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #e2e8f0;
+}
+
+.sct-icon {
+  font-size: 20px;
+}
+
+.sct-tag {
+  background: rgba(59, 130, 246, 0.2);
+  border: 1px solid #3b82f6;
+  color: #93c5fd;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 9999px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.sct-status-badges {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.sct-badge {
+  font-size: 12px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.badge-success {
+  background: rgba(16, 185, 129, 0.15);
+  border: 1px solid #10b981;
+  color: #6ee7b7;
+}
+
+.badge-inactive {
+  background: rgba(148, 163, 184, 0.15);
+  border: 1px solid #64748b;
+  color: #cbd5e1;
+}
+
+.badge-tenant {
+  background: rgba(99, 102, 241, 0.15);
+  border: 1px solid #6366f1;
+  color: #a5b4fc;
+}
+
+.badge-global {
+  background: rgba(245, 158, 11, 0.15);
+  border: 1px solid #f59e0b;
+  color: #fcd34d;
+}
+
+.sct-controls {
+  display: grid;
+  grid-template-columns: 1.2fr 1.2fr auto;
+  gap: 16px;
+  align-items: end;
+}
+
+@media (max-width: 1024px) {
+  .sct-controls {
+    grid-template-columns: 1fr;
+  }
+}
+
+.sct-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.sct-field label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.sct-field label code {
+  color: #38bdf8;
+  font-size: 11px;
+}
+
+.sct-input-wrap {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.sct-input-wrap input {
+  background: #0f172a !important;
+  border: 1px solid #475569 !important;
+  border-radius: 6px !important;
+  color: #f8fafc !important;
+  font-size: 13px !important;
+  padding: 8px 12px !important;
+  flex: 1;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.sct-input-wrap input:focus {
+  border-color: #3b82f6 !important;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.25);
+}
+
+.sct-input-wrap select {
+  background: #0f172a !important;
+  border: 1px solid #475569 !important;
+  border-radius: 6px !important;
+  color: #94a3b8 !important;
+  font-size: 12px !important;
+  padding: 8px 10px !important;
+  cursor: pointer;
+  outline: none;
+}
+
+.sct-input-wrap button {
+  background: #334155;
+  border: 1px solid #475569;
+  border-radius: 6px;
+  color: #e2e8f0;
+  padding: 8px 10px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.15s;
+}
+
+.sct-input-wrap button:hover {
+  background: #475569;
+}
+
+.sct-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.sct-btn {
+  border: none;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 9px 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.sct-btn-primary {
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  color: #ffffff;
+}
+
+.sct-btn-primary:hover {
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  transform: translateY(-1px);
+}
+
+.sct-btn-success {
+  background: linear-gradient(135deg, #059669 0%, #047857 100%);
+  color: #ffffff;
+}
+
+.sct-btn-success:hover {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  transform: translateY(-1px);
+}
+
+.sct-btn-danger {
+  background: rgba(239, 68, 68, 0.15);
+  border: 1px solid #ef4444;
+  color: #fca5a5;
+}
+
+.sct-btn-danger:hover {
+  background: rgba(239, 68, 68, 0.3);
+}
+
+/* 3. Toast Notifications */
+#swagger-custom-toast-container {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 999999;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  pointer-events: none;
+}
+
+.swagger-custom-toast {
+  pointer-events: auto;
+  background: #0f172a;
+  border: 1px solid #334155;
+  color: #f8fafc;
+  padding: 12px 18px;
+  border-radius: 8px;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.4);
+  font-size: 13px;
+  line-height: 1.4;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  opacity: 0;
+  transform: translateY(-15px);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  max-width: 420px;
+}
+
+.swagger-custom-toast.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.swagger-custom-toast.success {
+  border-left: 4px solid #10b981;
+}
+
+.swagger-custom-toast.info {
+  border-left: 4px solid #3b82f6;
+}
+
+.swagger-custom-toast.warning {
+  border-left: 4px solid #f59e0b;
+}
+
+.swagger-custom-toast code {
+  background: #1e293b;
+  padding: 2px 6px;
+  border-radius: 4px;
+  color: #38bdf8;
+  font-size: 12px;
+}
+
+/* 4. Swagger UI Lock Button Enhancement */
+.swagger-ui .auth-wrapper .authorize {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+  border-color: #10b981 !important;
+  color: white !important;
+  font-weight: 600 !important;
+  border-radius: 6px !important;
+  padding: 6px 14px !important;
+}
+
+.swagger-ui .auth-wrapper .authorize svg {
+  fill: white !important;
+}
