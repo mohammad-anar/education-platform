@@ -35,6 +35,8 @@ async function bootstrap() {
       logger.success(`🚀 Server running on http://localhost:${env.port}`);
       logger.info(`✨ Environment: ${env.node_env}`);
       logger.info(`🩺 Health Check: http://localhost:${env.port}/api/v1/health`);
+      logger.info(`📖 Swagger Docs: http://localhost:${env.port}/api/docs`);
+      logger.info(`📄 OpenAPI Spec: http://localhost:${env.port}/api/docs/openapi.json`);
     });
 
     // Initialize Socket.io
@@ -105,4 +107,5 @@ process.on("unhandledRejection", (error: any) => {
 process.on("SIGTERM", () => gracefulShutdown("SIGTERM"));
 process.on("SIGINT", () => gracefulShutdown("SIGINT"));
 
+// Bootstrap application server
 bootstrap();
