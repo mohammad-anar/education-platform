@@ -1,0 +1,2778 @@
+[
+  {
+    "method": "get",
+    "path": "/api/v1/academic/classes",
+    "guard": "academic.classGroup.read",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "Academic"
+  },
+  {
+    "method": "post",
+    "path": "/api/v1/academic/classes",
+    "guard": "academic.classGroup.create",
+    "schema": "`ClassGroupValidation.createZodSchema`",
+    "isPublic": false,
+    "tag": "Academic"
+  },
+  {
+    "method": "delete",
+    "path": "/api/v1/academic/classes/:id",
+    "guard": "academic.classGroup.delete",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "Academic"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/academic/classes/:id",
+    "guard": "academic.classGroup.read",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "Academic"
+  },
+  {
+    "method": "patch",
+    "path": "/api/v1/academic/classes/:id",
+    "guard": "academic.classGroup.update",
+    "schema": "`ClassGroupValidation.updateZodSchema`",
+    "isPublic": false,
+    "tag": "Academic"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/academic/enrollments",
+    "guard": "academic.enrollment.read",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "Academic"
+  },
+  {
+    "method": "post",
+    "path": "/api/v1/academic/enrollments",
+    "guard": "academic.enrollment.create",
+    "schema": "`EnrollmentValidation.createZodSchema`",
+    "isPublic": false,
+    "tag": "Academic"
+  },
+  {
+    "method": "delete",
+    "path": "/api/v1/academic/enrollments/:id",
+    "guard": "academic.enrollment.delete",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "Academic"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/academic/enrollments/:id",
+    "guard": "academic.enrollment.read",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "Academic"
+  },
+  {
+    "method": "patch",
+    "path": "/api/v1/academic/enrollments/:id",
+    "guard": "academic.enrollment.update",
+    "schema": "`EnrollmentValidation.updateZodSchema`",
+    "isPublic": false,
+    "tag": "Academic"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/academic/levels",
+    "guard": "academic.level.read",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "Academic"
+  },
+  {
+    "method": "post",
+    "path": "/api/v1/academic/levels",
+    "guard": "academic.level.create",
+    "schema": "`LevelValidation.createZodSchema`",
+    "isPublic": false,
+    "tag": "Academic"
+  },
+  {
+    "method": "delete",
+    "path": "/api/v1/academic/levels/:id",
+    "guard": "academic.level.delete",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "Academic"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/academic/levels/:id",
+    "guard": "academic.level.read",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "Academic"
+  },
+  {
+    "method": "patch",
+    "path": "/api/v1/academic/levels/:id",
+    "guard": "academic.level.update",
+    "schema": "`LevelValidation.updateZodSchema`",
+    "isPublic": false,
+    "tag": "Academic"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/academic/programs",
+    "guard": "academic.program.read",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "Academic"
+  },
+  {
+    "method": "post",
+    "path": "/api/v1/academic/programs",
+    "guard": "academic.program.create",
+    "schema": "`ProgramValidation.createZodSchema`",
+    "isPublic": false,
+    "tag": "Academic"
+  },
+  {
+    "method": "delete",
+    "path": "/api/v1/academic/programs/:id",
+    "guard": "academic.program.delete",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "Academic"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/academic/programs/:id",
+    "guard": "academic.program.read",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "Academic"
+  },
+  {
+    "method": "patch",
+    "path": "/api/v1/academic/programs/:id",
+    "guard": "academic.program.update",
+    "schema": "`ProgramValidation.updateZodSchema`",
+    "isPublic": false,
+    "tag": "Academic"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/academic/sections",
+    "guard": "academic.section.read",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "Academic"
+  },
+  {
+    "method": "post",
+    "path": "/api/v1/academic/sections",
+    "guard": "academic.section.create",
+    "schema": "`SectionValidation.createZodSchema`",
+    "isPublic": false,
+    "tag": "Academic"
+  },
+  {
+    "method": "delete",
+    "path": "/api/v1/academic/sections/:id",
+    "guard": "academic.section.delete",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "Academic"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/academic/sections/:id",
+    "guard": "academic.section.read",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "Academic"
+  },
+  {
+    "method": "patch",
+    "path": "/api/v1/academic/sections/:id",
+    "guard": "academic.section.update",
+    "schema": "`SectionValidation.updateZodSchema`",
+    "isPublic": false,
+    "tag": "Academic"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/academic/subjects",
+    "guard": "academic.subject.read",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "Academic"
+  },
+  {
+    "method": "post",
+    "path": "/api/v1/academic/subjects",
+    "guard": "academic.subject.create",
+    "schema": "`SubjectValidation.createZodSchema`",
+    "isPublic": false,
+    "tag": "Academic"
+  },
+  {
+    "method": "delete",
+    "path": "/api/v1/academic/subjects/:id",
+    "guard": "academic.subject.delete",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "Academic"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/academic/subjects/:id",
+    "guard": "academic.subject.read",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "Academic"
+  },
+  {
+    "method": "patch",
+    "path": "/api/v1/academic/subjects/:id",
+    "guard": "academic.subject.update",
+    "schema": "`SubjectValidation.updateZodSchema`",
+    "isPublic": false,
+    "tag": "Academic"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/academic/years",
+    "guard": "academic.academicYear.read",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "Academic"
+  },
+  {
+    "method": "post",
+    "path": "/api/v1/academic/years",
+    "guard": "academic.academicYear.create",
+    "schema": "`AcademicYearValidation.createZodSchema`",
+    "isPublic": false,
+    "tag": "Academic"
+  },
+  {
+    "method": "delete",
+    "path": "/api/v1/academic/years/:id",
+    "guard": "academic.academicYear.delete",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "Academic"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/academic/years/:id",
+    "guard": "academic.academicYear.read",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "Academic"
+  },
+  {
+    "method": "patch",
+    "path": "/api/v1/academic/years/:id",
+    "guard": "academic.academicYear.update",
+    "schema": "`AcademicYearValidation.updateZodSchema`",
+    "isPublic": false,
+    "tag": "Academic"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/assessment/assessments",
+    "guard": "assessment.assessment.read",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "Assessment"
+  },
+  {
+    "method": "post",
+    "path": "/api/v1/assessment/assessments",
+    "guard": "assessment.assessment.create",
+    "schema": "`AssessmentValidation.createZodSchema`",
+    "isPublic": false,
+    "tag": "Assessment"
+  },
+  {
+    "method": "delete",
+    "path": "/api/v1/assessment/assessments/:id",
+    "guard": "assessment.assessment.delete",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "Assessment"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/assessment/assessments/:id",
+    "guard": "assessment.assessment.read",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "Assessment"
+  },
+  {
+    "method": "patch",
+    "path": "/api/v1/assessment/assessments/:id",
+    "guard": "assessment.assessment.update",
+    "schema": "`AssessmentValidation.updateZodSchema`",
+    "isPublic": false,
+    "tag": "Assessment"
+  },
+  {
+    "method": "post",
+    "path": "/api/v1/assessment/assessments/:id/submit-assignment",
+    "guard": "assessment.assessment.read",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "Assessment"
+  },
+  {
+    "method": "post",
+    "path": "/api/v1/assessment/assessments/:id/submit-quiz",
+    "guard": "assessment.assessment.read",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "Assessment"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/assessment/exams",
+    "guard": "assessment.exam.read",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "Assessment"
+  },
+  {
+    "method": "post",
+    "path": "/api/v1/assessment/exams",
+    "guard": "assessment.exam.create",
+    "schema": "`ExamValidation.createZodSchema`",
+    "isPublic": false,
+    "tag": "Assessment"
+  },
+  {
+    "method": "delete",
+    "path": "/api/v1/assessment/exams/:id",
+    "guard": "assessment.exam.delete",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "Assessment"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/assessment/exams/:id",
+    "guard": "assessment.exam.read",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "Assessment"
+  },
+  {
+    "method": "patch",
+    "path": "/api/v1/assessment/exams/:id",
+    "guard": "assessment.exam.update",
+    "schema": "`ExamValidation.updateZodSchema`",
+    "isPublic": false,
+    "tag": "Assessment"
+  },
+  {
+    "method": "patch",
+    "path": "/api/v1/assessment/exams/marks/:id",
+    "guard": "assessment.exam.updateMark",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "Assessment"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/assessment/grading-systems",
+    "guard": "assessment.grading.read",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "Assessment"
+  },
+  {
+    "method": "post",
+    "path": "/api/v1/assessment/grading-systems",
+    "guard": "assessment.grading.create",
+    "schema": "`GradingValidation.createZodSchema`",
+    "isPublic": false,
+    "tag": "Assessment"
+  },
+  {
+    "method": "delete",
+    "path": "/api/v1/assessment/grading-systems/:id",
+    "guard": "assessment.grading.delete",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "Assessment"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/assessment/grading-systems/:id",
+    "guard": "assessment.grading.read",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "Assessment"
+  },
+  {
+    "method": "patch",
+    "path": "/api/v1/assessment/grading-systems/:id",
+    "guard": "assessment.grading.update",
+    "schema": "`GradingValidation.updateZodSchema`",
+    "isPublic": false,
+    "tag": "Assessment"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/assessment/marking-schemes",
+    "guard": "assessment.markingScheme.read",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "Assessment"
+  },
+  {
+    "method": "post",
+    "path": "/api/v1/assessment/marking-schemes",
+    "guard": "assessment.markingScheme.create",
+    "schema": "`MarkingSchemeValidation.createZodSchema`",
+    "isPublic": false,
+    "tag": "Assessment"
+  },
+  {
+    "method": "delete",
+    "path": "/api/v1/assessment/marking-schemes/:id",
+    "guard": "assessment.markingScheme.delete",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "Assessment"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/assessment/marking-schemes/:id",
+    "guard": "assessment.markingScheme.read",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "Assessment"
+  },
+  {
+    "method": "patch",
+    "path": "/api/v1/assessment/marking-schemes/:id",
+    "guard": "assessment.markingScheme.update",
+    "schema": "`MarkingSchemeValidation.updateZodSchema`",
+    "isPublic": false,
+    "tag": "Assessment"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/assessment/results",
+    "guard": "assessment.result.read",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "Assessment"
+  },
+  {
+    "method": "post",
+    "path": "/api/v1/assessment/results",
+    "guard": "assessment.result.create",
+    "schema": "`ResultValidation.createZodSchema`",
+    "isPublic": false,
+    "tag": "Assessment"
+  },
+  {
+    "method": "delete",
+    "path": "/api/v1/assessment/results/:id",
+    "guard": "assessment.result.delete",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "Assessment"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/assessment/results/:id",
+    "guard": "assessment.result.read",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "Assessment"
+  },
+  {
+    "method": "patch",
+    "path": "/api/v1/assessment/results/:id",
+    "guard": "assessment.result.update",
+    "schema": "`ResultValidation.updateZodSchema`",
+    "isPublic": false,
+    "tag": "Assessment"
+  },
+  {
+    "method": "post",
+    "path": "/api/v1/assessment/results/:id/override",
+    "guard": "assessment.result.override",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "Assessment"
+  },
+  {
+    "method": "post",
+    "path": "/api/v1/assessment/results/:id/publish",
+    "guard": "assessment.result.publish",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "Assessment"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/attendance/calendars",
+    "guard": "attendance.calendar.read",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "Attendance"
+  },
+  {
+    "method": "post",
+    "path": "/api/v1/attendance/calendars",
+    "guard": "attendance.calendar.create",
+    "schema": "`CalendarValidation.createZodSchema`",
+    "isPublic": false,
+    "tag": "Attendance"
+  },
+  {
+    "method": "delete",
+    "path": "/api/v1/attendance/calendars/:id",
+    "guard": "attendance.calendar.delete",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "Attendance"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/attendance/calendars/:id",
+    "guard": "attendance.calendar.read",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "Attendance"
+  },
+  {
+    "method": "patch",
+    "path": "/api/v1/attendance/calendars/:id",
+    "guard": "attendance.calendar.update",
+    "schema": "`CalendarValidation.updateZodSchema`",
+    "isPublic": false,
+    "tag": "Attendance"
+  },
+  {
+    "method": "post",
+    "path": "/api/v1/attendance/calendars/:id/generate-sessions",
+    "guard": "attendance.calendar.generateSessions",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "Attendance"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/attendance/live-classes",
+    "guard": "attendance.liveClass.read",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "Attendance"
+  },
+  {
+    "method": "post",
+    "path": "/api/v1/attendance/live-classes",
+    "guard": "attendance.liveClass.create",
+    "schema": "`LiveClassValidation.createZodSchema`",
+    "isPublic": false,
+    "tag": "Attendance"
+  },
+  {
+    "method": "delete",
+    "path": "/api/v1/attendance/live-classes/:id",
+    "guard": "attendance.liveClass.delete",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "Attendance"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/attendance/live-classes/:id",
+    "guard": "attendance.liveClass.read",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "Attendance"
+  },
+  {
+    "method": "patch",
+    "path": "/api/v1/attendance/live-classes/:id",
+    "guard": "attendance.liveClass.update",
+    "schema": "`LiveClassValidation.updateZodSchema`",
+    "isPublic": false,
+    "tag": "Attendance"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/attendance/policies",
+    "guard": "attendance.policy.read",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "Attendance"
+  },
+  {
+    "method": "post",
+    "path": "/api/v1/attendance/policies",
+    "guard": "attendance.policy.create",
+    "schema": "`PolicyValidation.createZodSchema`",
+    "isPublic": false,
+    "tag": "Attendance"
+  },
+  {
+    "method": "delete",
+    "path": "/api/v1/attendance/policies/:id",
+    "guard": "attendance.policy.delete",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "Attendance"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/attendance/policies/:id",
+    "guard": "attendance.policy.read",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "Attendance"
+  },
+  {
+    "method": "patch",
+    "path": "/api/v1/attendance/policies/:id",
+    "guard": "attendance.policy.update",
+    "schema": "`PolicyValidation.updateZodSchema`",
+    "isPublic": false,
+    "tag": "Attendance"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/attendance/routines",
+    "guard": "attendance.routine.read",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "Attendance"
+  },
+  {
+    "method": "post",
+    "path": "/api/v1/attendance/routines",
+    "guard": "attendance.routine.create",
+    "schema": "`RoutineValidation.createZodSchema`",
+    "isPublic": false,
+    "tag": "Attendance"
+  },
+  {
+    "method": "delete",
+    "path": "/api/v1/attendance/routines/:id",
+    "guard": "attendance.routine.delete",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "Attendance"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/attendance/routines/:id",
+    "guard": "attendance.routine.read",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "Attendance"
+  },
+  {
+    "method": "patch",
+    "path": "/api/v1/attendance/routines/:id",
+    "guard": "attendance.routine.update",
+    "schema": "`RoutineValidation.updateZodSchema`",
+    "isPublic": false,
+    "tag": "Attendance"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/attendance/sessions",
+    "guard": "attendance.session.read",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "Attendance"
+  },
+  {
+    "method": "post",
+    "path": "/api/v1/attendance/sessions",
+    "guard": "attendance.session.create",
+    "schema": "`SessionValidation.createZodSchema`",
+    "isPublic": false,
+    "tag": "Attendance"
+  },
+  {
+    "method": "delete",
+    "path": "/api/v1/attendance/sessions/:id",
+    "guard": "attendance.session.delete",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "Attendance"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/attendance/sessions/:id",
+    "guard": "attendance.session.read",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "Attendance"
+  },
+  {
+    "method": "patch",
+    "path": "/api/v1/attendance/sessions/:id",
+    "guard": "attendance.session.update",
+    "schema": "`SessionValidation.updateZodSchema`",
+    "isPublic": false,
+    "tag": "Attendance"
+  },
+  {
+    "method": "post",
+    "path": "/api/v1/attendance/sessions/:id/mark",
+    "guard": "attendance.session.update",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "Attendance"
+  },
+  {
+    "method": "post",
+    "path": "/api/v1/auth/change-password",
+    "guard": "*auth()*",
+    "schema": "`AuthValidation.changePasswordZodSchema`",
+    "isPublic": false,
+    "tag": "Auth"
+  },
+  {
+    "method": "post",
+    "path": "/api/v1/auth/forgot-password",
+    "guard": "*Public*",
+    "schema": "`AuthValidation.forgotPasswordZodSchema`",
+    "isPublic": true,
+    "tag": "Auth"
+  },
+  {
+    "method": "post",
+    "path": "/api/v1/auth/login",
+    "guard": "*Public*",
+    "schema": "`AuthValidation.loginZodSchema`",
+    "isPublic": true,
+    "tag": "Auth"
+  },
+  {
+    "method": "post",
+    "path": "/api/v1/auth/logout",
+    "guard": "*auth()*",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "Auth"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/auth/me",
+    "guard": "*auth()*",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "Auth"
+  },
+  {
+    "method": "post",
+    "path": "/api/v1/auth/refresh-token",
+    "guard": "*Public*",
+    "schema": "`AuthValidation.refreshTokenZodSchema`",
+    "isPublic": true,
+    "tag": "Auth"
+  },
+  {
+    "method": "post",
+    "path": "/api/v1/auth/register",
+    "guard": "*Public*",
+    "schema": "`AuthValidation.registerZodSchema`",
+    "isPublic": true,
+    "tag": "Auth"
+  },
+  {
+    "method": "post",
+    "path": "/api/v1/auth/reset-password",
+    "guard": "*Public*",
+    "schema": "`AuthValidation.resetPasswordZodSchema`",
+    "isPublic": true,
+    "tag": "Auth"
+  },
+  {
+    "method": "post",
+    "path": "/api/v1/auth/send-otp",
+    "guard": "*Public*",
+    "schema": "`AuthValidation.sendOtpZodSchema`",
+    "isPublic": true,
+    "tag": "Auth"
+  },
+  {
+    "method": "post",
+    "path": "/api/v1/auth/verify-otp",
+    "guard": "*Public*",
+    "schema": "`AuthValidation.verifyOtpZodSchema`",
+    "isPublic": true,
+    "tag": "Auth"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/dashboard/admin",
+    "guard": "admin.dashboard.view",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "Role Dashboards"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/dashboard/admin/attendance-rate",
+    "guard": "admin.dashboard.view",
+    "schema": "`DashboardValidation.adminFilterQueryZodSchema`",
+    "isPublic": false,
+    "tag": "Role Dashboards"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/dashboard/admin/enrollment-trend",
+    "guard": "admin.dashboard.view",
+    "schema": "`DashboardValidation.adminFilterQueryZodSchema`",
+    "isPublic": false,
+    "tag": "Role Dashboards"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/dashboard/admin/lms-engagement",
+    "guard": "admin.dashboard.view",
+    "schema": "`DashboardValidation.adminFilterQueryZodSchema`",
+    "isPublic": false,
+    "tag": "Role Dashboards"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/dashboard/admin/result-pass-rate",
+    "guard": "admin.dashboard.view",
+    "schema": "`DashboardValidation.adminFilterQueryZodSchema`",
+    "isPublic": false,
+    "tag": "Role Dashboards"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/dashboard/admin/support-stats",
+    "guard": "admin.dashboard.view",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "Role Dashboards"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/dashboard/admin/teacher-workload",
+    "guard": "admin.dashboard.view",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "Role Dashboards"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/dashboard/guardian",
+    "guard": "guardian.dashboard.view",
+    "schema": "`DashboardValidation.guardianFilterQueryZodSchema`",
+    "isPublic": false,
+    "tag": "Role Dashboards"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/dashboard/guardian/children",
+    "guard": "guardian.dashboard.view",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "Role Dashboards"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/dashboard/guardian/children/:childId",
+    "guard": "guardian.dashboard.view",
+    "schema": "`DashboardValidation.childIdParamZodSchema`",
+    "isPublic": false,
+    "tag": "Role Dashboards"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/dashboard/guardian/children/:childId/attendance",
+    "guard": "guardian.dashboard.view",
+    "schema": "`DashboardValidation.childIdParamZodSchema`",
+    "isPublic": false,
+    "tag": "Role Dashboards"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/dashboard/guardian/children/:childId/notices",
+    "guard": "guardian.dashboard.view",
+    "schema": "`DashboardValidation.childIdParamZodSchema`",
+    "isPublic": false,
+    "tag": "Role Dashboards"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/dashboard/guardian/children/:childId/results",
+    "guard": "guardian.dashboard.view",
+    "schema": "`DashboardValidation.childIdParamZodSchema`",
+    "isPublic": false,
+    "tag": "Role Dashboards"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/dashboard/teacher",
+    "guard": "teacher.dashboard.view",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "Role Dashboards"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/dashboard/teacher/assignment-submission-rate",
+    "guard": "teacher.dashboard.view",
+    "schema": "`DashboardValidation.teacherFilterQueryZodSchema`",
+    "isPublic": false,
+    "tag": "Role Dashboards"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/dashboard/teacher/at-risk-students",
+    "guard": "teacher.dashboard.view",
+    "schema": "`DashboardValidation.teacherFilterQueryZodSchema`",
+    "isPublic": false,
+    "tag": "Role Dashboards"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/dashboard/teacher/class-attendance-stats",
+    "guard": "teacher.dashboard.view",
+    "schema": "`DashboardValidation.teacherFilterQueryZodSchema`",
+    "isPublic": false,
+    "tag": "Role Dashboards"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/dashboard/teacher/course-completion-funnel",
+    "guard": "teacher.dashboard.view",
+    "schema": "`DashboardValidation.teacherFilterQueryZodSchema`",
+    "isPublic": false,
+    "tag": "Role Dashboards"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/dashboard/teacher/pending-attendance",
+    "guard": "teacher.dashboard.view",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "Role Dashboards"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/dashboard/teacher/pending-grading",
+    "guard": "teacher.dashboard.view",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "Role Dashboards"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/dashboard/teacher/quiz-performance",
+    "guard": "teacher.dashboard.view",
+    "schema": "`DashboardValidation.teacherFilterQueryZodSchema`",
+    "isPublic": false,
+    "tag": "Role Dashboards"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/dashboard/teacher/today-classes",
+    "guard": "teacher.dashboard.view",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "Role Dashboards"
+  },
+  {
+    "method": "patch",
+    "path": "/api/v1/directory/institute/contact-visibility",
+    "guard": "saas.institute.settings",
+    "schema": "`DirectoryValidation.updateInstituteContactVisibilityZodSchema`",
+    "isPublic": false,
+    "tag": "Directory"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/directory/institute/public-profile",
+    "guard": "directory.institute.view",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "Directory"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/directory/staff",
+    "guard": "directory.staff.view",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "Directory"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/directory/teachers",
+    "guard": "directory.teacher.view",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "Directory"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/directory/teachers/:id",
+    "guard": "directory.teacher.view",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "Directory"
+  },
+  {
+    "method": "patch",
+    "path": "/api/v1/directory/teachers/me/visibility",
+    "guard": "people.teacher.update",
+    "schema": "`DirectoryValidation.updateTeacherVisibilityZodSchema`",
+    "isPublic": false,
+    "tag": "Directory"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/health",
+    "guard": "*Public*",
+    "schema": "None",
+    "isPublic": true,
+    "tag": "Health"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/identity/permissions",
+    "guard": "identity.permission.read",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "Identity"
+  },
+  {
+    "method": "post",
+    "path": "/api/v1/identity/permissions",
+    "guard": "identity.permission.create",
+    "schema": "`PermissionValidation.createZodSchema`",
+    "isPublic": false,
+    "tag": "Identity"
+  },
+  {
+    "method": "delete",
+    "path": "/api/v1/identity/permissions/:id",
+    "guard": "identity.permission.delete",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "Identity"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/identity/permissions/:id",
+    "guard": "identity.permission.read",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "Identity"
+  },
+  {
+    "method": "patch",
+    "path": "/api/v1/identity/permissions/:id",
+    "guard": "identity.permission.update",
+    "schema": "`PermissionValidation.updateZodSchema`",
+    "isPublic": false,
+    "tag": "Identity"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/identity/permissions/catalog",
+    "guard": "identity.permission.read",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "Identity"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/identity/roles",
+    "guard": "identity.role.read",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "Identity"
+  },
+  {
+    "method": "post",
+    "path": "/api/v1/identity/roles",
+    "guard": "identity.role.create",
+    "schema": "`RoleValidation.createZodSchema`",
+    "isPublic": false,
+    "tag": "Identity"
+  },
+  {
+    "method": "delete",
+    "path": "/api/v1/identity/roles/:id",
+    "guard": "identity.role.delete",
+    "schema": "`RoleValidation.deleteRoleZodSchema`",
+    "isPublic": false,
+    "tag": "Identity"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/identity/roles/:id",
+    "guard": "identity.role.read",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "Identity"
+  },
+  {
+    "method": "patch",
+    "path": "/api/v1/identity/roles/:id",
+    "guard": "identity.role.update",
+    "schema": "`RoleValidation.updateZodSchema`",
+    "isPublic": false,
+    "tag": "Identity"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/identity/roles/:id/impact",
+    "guard": "identity.role.read",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "Identity"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/identity/roles/:id/matrix",
+    "guard": "identity.role.read",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "Identity"
+  },
+  {
+    "method": "put",
+    "path": "/api/v1/identity/roles/:id/matrix",
+    "guard": "identity.role.assignPermissions",
+    "schema": "`RoleValidation.setRoleMatrixZodSchema`",
+    "isPublic": false,
+    "tag": "Identity"
+  },
+  {
+    "method": "put",
+    "path": "/api/v1/identity/roles/:id/permissions",
+    "guard": "identity.role.assignPermissions",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "Identity"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/identity/users",
+    "guard": "identity.user.read",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "Identity"
+  },
+  {
+    "method": "post",
+    "path": "/api/v1/identity/users",
+    "guard": "identity.user.create",
+    "schema": "`UserValidation.createZodSchema`",
+    "isPublic": false,
+    "tag": "Identity"
+  },
+  {
+    "method": "delete",
+    "path": "/api/v1/identity/users/:id",
+    "guard": "identity.user.delete",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "Identity"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/identity/users/:id",
+    "guard": "identity.user.read",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "Identity"
+  },
+  {
+    "method": "patch",
+    "path": "/api/v1/identity/users/:id",
+    "guard": "identity.user.update",
+    "schema": "`UserValidation.updateZodSchema`",
+    "isPublic": false,
+    "tag": "Identity"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/identity/users/:id/effective-permissions",
+    "guard": "identity.user.read",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "Identity"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/identity/users/:id/permission-overrides",
+    "guard": "identity.user.read",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "Identity"
+  },
+  {
+    "method": "post",
+    "path": "/api/v1/identity/users/:id/permission-overrides",
+    "guard": "identity.user.overridePermission",
+    "schema": "`UserValidation.grantOverrideZodSchema`",
+    "isPublic": false,
+    "tag": "Identity"
+  },
+  {
+    "method": "delete",
+    "path": "/api/v1/identity/users/:id/permission-overrides/:overrideId",
+    "guard": "identity.user.overridePermission",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "Identity"
+  },
+  {
+    "method": "post",
+    "path": "/api/v1/identity/users/:id/roles",
+    "guard": "identity.user.assignRole",
+    "schema": "`UserValidation.assignRoleZodSchema`",
+    "isPublic": false,
+    "tag": "Identity"
+  },
+  {
+    "method": "delete",
+    "path": "/api/v1/identity/users/:id/roles/:roleId",
+    "guard": "identity.user.assignRole",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "Identity"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/institute/public-profile",
+    "guard": "directory.institute.view",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "Directory"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/lms/bundles",
+    "guard": "lms.bundle.read",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "LMS"
+  },
+  {
+    "method": "post",
+    "path": "/api/v1/lms/bundles",
+    "guard": "lms.bundle.create",
+    "schema": "`BundleValidation.createZodSchema`",
+    "isPublic": false,
+    "tag": "LMS"
+  },
+  {
+    "method": "delete",
+    "path": "/api/v1/lms/bundles/:id",
+    "guard": "lms.bundle.delete",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "LMS"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/lms/bundles/:id",
+    "guard": "lms.bundle.read",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "LMS"
+  },
+  {
+    "method": "patch",
+    "path": "/api/v1/lms/bundles/:id",
+    "guard": "lms.bundle.update",
+    "schema": "`BundleValidation.updateZodSchema`",
+    "isPublic": false,
+    "tag": "LMS"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/lms/courses",
+    "guard": "lms.course.read",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "LMS"
+  },
+  {
+    "method": "post",
+    "path": "/api/v1/lms/courses",
+    "guard": "lms.course.create",
+    "schema": "`CourseValidation.createZodSchema`",
+    "isPublic": false,
+    "tag": "LMS"
+  },
+  {
+    "method": "delete",
+    "path": "/api/v1/lms/courses/:id",
+    "guard": "lms.course.delete",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "LMS"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/lms/courses/:id",
+    "guard": "lms.course.read",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "LMS"
+  },
+  {
+    "method": "patch",
+    "path": "/api/v1/lms/courses/:id",
+    "guard": "lms.course.update",
+    "schema": "`CourseValidation.updateZodSchema`",
+    "isPublic": false,
+    "tag": "LMS"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/lms/courses/:id/stats",
+    "guard": "lms.course.stats",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "LMS"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/lms/enrollments",
+    "guard": "lms.courseEnrollment.read",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "LMS"
+  },
+  {
+    "method": "post",
+    "path": "/api/v1/lms/enrollments",
+    "guard": "lms.courseEnrollment.create",
+    "schema": "`CourseEnrollmentValidation.createZodSchema`",
+    "isPublic": false,
+    "tag": "LMS"
+  },
+  {
+    "method": "delete",
+    "path": "/api/v1/lms/enrollments/:id",
+    "guard": "lms.courseEnrollment.delete",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "LMS"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/lms/enrollments/:id",
+    "guard": "lms.courseEnrollment.read",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "LMS"
+  },
+  {
+    "method": "patch",
+    "path": "/api/v1/lms/enrollments/:id",
+    "guard": "lms.courseEnrollment.update",
+    "schema": "`CourseEnrollmentValidation.updateZodSchema`",
+    "isPublic": false,
+    "tag": "LMS"
+  },
+  {
+    "method": "post",
+    "path": "/api/v1/lms/enrollments/restrictions",
+    "guard": "lms.courseEnrollment.restrict",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "LMS"
+  },
+  {
+    "method": "post",
+    "path": "/api/v1/lms/enrollments/restrictions/:restrictionId/revoke",
+    "guard": "lms.courseEnrollment.revokeRestriction",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "LMS"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/lms/learning-items",
+    "guard": "lms.learningItem.read",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "LMS"
+  },
+  {
+    "method": "post",
+    "path": "/api/v1/lms/learning-items",
+    "guard": "lms.learningItem.create",
+    "schema": "`LearningItemValidation.createZodSchema`",
+    "isPublic": false,
+    "tag": "LMS"
+  },
+  {
+    "method": "delete",
+    "path": "/api/v1/lms/learning-items/:id",
+    "guard": "lms.learningItem.delete",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "LMS"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/lms/learning-items/:id",
+    "guard": "lms.learningItem.read",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "LMS"
+  },
+  {
+    "method": "patch",
+    "path": "/api/v1/lms/learning-items/:id",
+    "guard": "lms.learningItem.update",
+    "schema": "`LearningItemValidation.updateZodSchema`",
+    "isPublic": false,
+    "tag": "LMS"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/lms/lessons",
+    "guard": "lms.lesson.read",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "LMS"
+  },
+  {
+    "method": "post",
+    "path": "/api/v1/lms/lessons",
+    "guard": "lms.lesson.create",
+    "schema": "`LessonValidation.createZodSchema`",
+    "isPublic": false,
+    "tag": "LMS"
+  },
+  {
+    "method": "delete",
+    "path": "/api/v1/lms/lessons/:id",
+    "guard": "lms.lesson.delete",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "LMS"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/lms/lessons/:id",
+    "guard": "lms.lesson.read",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "LMS"
+  },
+  {
+    "method": "patch",
+    "path": "/api/v1/lms/lessons/:id",
+    "guard": "lms.lesson.update",
+    "schema": "`LessonValidation.updateZodSchema`",
+    "isPublic": false,
+    "tag": "LMS"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/lms/milestones",
+    "guard": "lms.milestone.read",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "LMS"
+  },
+  {
+    "method": "post",
+    "path": "/api/v1/lms/milestones",
+    "guard": "lms.milestone.create",
+    "schema": "`MilestoneValidation.createZodSchema`",
+    "isPublic": false,
+    "tag": "LMS"
+  },
+  {
+    "method": "delete",
+    "path": "/api/v1/lms/milestones/:id",
+    "guard": "lms.milestone.delete",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "LMS"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/lms/milestones/:id",
+    "guard": "lms.milestone.read",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "LMS"
+  },
+  {
+    "method": "patch",
+    "path": "/api/v1/lms/milestones/:id",
+    "guard": "lms.milestone.update",
+    "schema": "`MilestoneValidation.updateZodSchema`",
+    "isPublic": false,
+    "tag": "LMS"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/lms/modules",
+    "guard": "lms.module.read",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "LMS"
+  },
+  {
+    "method": "post",
+    "path": "/api/v1/lms/modules",
+    "guard": "lms.module.create",
+    "schema": "`ModuleValidation.createZodSchema`",
+    "isPublic": false,
+    "tag": "LMS"
+  },
+  {
+    "method": "delete",
+    "path": "/api/v1/lms/modules/:id",
+    "guard": "lms.module.delete",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "LMS"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/lms/modules/:id",
+    "guard": "lms.module.read",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "LMS"
+  },
+  {
+    "method": "patch",
+    "path": "/api/v1/lms/modules/:id",
+    "guard": "lms.module.update",
+    "schema": "`ModuleValidation.updateZodSchema`",
+    "isPublic": false,
+    "tag": "LMS"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/lms/notes",
+    "guard": "lms.lessonNote.read",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "LMS"
+  },
+  {
+    "method": "post",
+    "path": "/api/v1/lms/notes",
+    "guard": "lms.lessonNote.create",
+    "schema": "`LessonNoteValidation.createZodSchema`",
+    "isPublic": false,
+    "tag": "LMS"
+  },
+  {
+    "method": "delete",
+    "path": "/api/v1/lms/notes/:id",
+    "guard": "lms.lessonNote.delete",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "LMS"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/lms/notes/:id",
+    "guard": "lms.lessonNote.read",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "LMS"
+  },
+  {
+    "method": "patch",
+    "path": "/api/v1/lms/notes/:id",
+    "guard": "lms.lessonNote.update",
+    "schema": "`LessonNoteValidation.updateZodSchema`",
+    "isPublic": false,
+    "tag": "LMS"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/lms/videos",
+    "guard": "lms.lessonVideo.read",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "LMS"
+  },
+  {
+    "method": "post",
+    "path": "/api/v1/lms/videos",
+    "guard": "lms.lessonVideo.create",
+    "schema": "`LessonVideoValidation.createZodSchema`",
+    "isPublic": false,
+    "tag": "LMS"
+  },
+  {
+    "method": "delete",
+    "path": "/api/v1/lms/videos/:id",
+    "guard": "lms.lessonVideo.delete",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "LMS"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/lms/videos/:id",
+    "guard": "lms.lessonVideo.read",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "LMS"
+  },
+  {
+    "method": "patch",
+    "path": "/api/v1/lms/videos/:id",
+    "guard": "lms.lessonVideo.update",
+    "schema": "`LessonVideoValidation.updateZodSchema`",
+    "isPublic": false,
+    "tag": "LMS"
+  },
+  {
+    "method": "post",
+    "path": "/api/v1/lms/videos/:id/heartbeat",
+    "guard": "lms.lessonVideo.read",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "LMS"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/people/guardians",
+    "guard": "people.guardian.read",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "People"
+  },
+  {
+    "method": "post",
+    "path": "/api/v1/people/guardians",
+    "guard": "people.guardian.create",
+    "schema": "`GuardianValidation.createZodSchema`",
+    "isPublic": false,
+    "tag": "People"
+  },
+  {
+    "method": "delete",
+    "path": "/api/v1/people/guardians/:id",
+    "guard": "people.guardian.delete",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "People"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/people/guardians/:id",
+    "guard": "people.guardian.read",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "People"
+  },
+  {
+    "method": "patch",
+    "path": "/api/v1/people/guardians/:id",
+    "guard": "people.guardian.update",
+    "schema": "`GuardianValidation.updateZodSchema`",
+    "isPublic": false,
+    "tag": "People"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/people/staff",
+    "guard": "people.staff.read",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "People"
+  },
+  {
+    "method": "post",
+    "path": "/api/v1/people/staff",
+    "guard": "people.staff.create",
+    "schema": "`StaffValidation.createZodSchema`",
+    "isPublic": false,
+    "tag": "People"
+  },
+  {
+    "method": "delete",
+    "path": "/api/v1/people/staff/:id",
+    "guard": "people.staff.delete",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "People"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/people/staff/:id",
+    "guard": "people.staff.read",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "People"
+  },
+  {
+    "method": "patch",
+    "path": "/api/v1/people/staff/:id",
+    "guard": "people.staff.update",
+    "schema": "`StaffValidation.adminUpdateZodSchema`",
+    "isPublic": false,
+    "tag": "People"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/people/staff/me",
+    "guard": "people.staff.read",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "People"
+  },
+  {
+    "method": "patch",
+    "path": "/api/v1/people/staff/me",
+    "guard": "people.staff.update",
+    "schema": "`StaffValidation.selfUpdateZodSchema`",
+    "isPublic": false,
+    "tag": "People"
+  },
+  {
+    "method": "post",
+    "path": "/api/v1/people/staff/me/documents",
+    "guard": "people.staff.update",
+    "schema": "`StaffValidation.addDocumentZodSchema`",
+    "isPublic": false,
+    "tag": "People"
+  },
+  {
+    "method": "delete",
+    "path": "/api/v1/people/staff/me/documents/:docId",
+    "guard": "people.staff.update",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "People"
+  },
+  {
+    "method": "patch",
+    "path": "/api/v1/people/staff/me/notification-prefs",
+    "guard": "people.staff.update",
+    "schema": "`StaffValidation.updateNotificationPrefsZodSchema`",
+    "isPublic": false,
+    "tag": "People"
+  },
+  {
+    "method": "post",
+    "path": "/api/v1/people/staff/me/photo",
+    "guard": "people.staff.update",
+    "schema": "`StaffValidation.uploadPhotoZodSchema`",
+    "isPublic": false,
+    "tag": "People"
+  },
+  {
+    "method": "patch",
+    "path": "/api/v1/people/staff/me/visibility",
+    "guard": "people.staff.update",
+    "schema": "`StaffValidation.updateVisibilityZodSchema`",
+    "isPublic": false,
+    "tag": "People"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/people/students",
+    "guard": "people.student.read",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "People"
+  },
+  {
+    "method": "post",
+    "path": "/api/v1/people/students",
+    "guard": "people.student.create",
+    "schema": "`StudentValidation.createZodSchema`",
+    "isPublic": false,
+    "tag": "People"
+  },
+  {
+    "method": "delete",
+    "path": "/api/v1/people/students/:id",
+    "guard": "people.student.delete",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "People"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/people/students/:id",
+    "guard": "people.student.read",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "People"
+  },
+  {
+    "method": "patch",
+    "path": "/api/v1/people/students/:id",
+    "guard": "people.student.update",
+    "schema": "`StudentValidation.adminUpdateZodSchema`",
+    "isPublic": false,
+    "tag": "People"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/people/students/:id/stats",
+    "guard": "people.student.stats",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "People"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/people/students/me",
+    "guard": "people.student.read",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "People"
+  },
+  {
+    "method": "patch",
+    "path": "/api/v1/people/students/me",
+    "guard": "people.student.update",
+    "schema": "`StudentValidation.selfUpdateZodSchema`",
+    "isPublic": false,
+    "tag": "People"
+  },
+  {
+    "method": "post",
+    "path": "/api/v1/people/students/me/documents",
+    "guard": "people.student.update",
+    "schema": "`StudentValidation.addDocumentZodSchema`",
+    "isPublic": false,
+    "tag": "People"
+  },
+  {
+    "method": "delete",
+    "path": "/api/v1/people/students/me/documents/:docId",
+    "guard": "people.student.update",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "People"
+  },
+  {
+    "method": "patch",
+    "path": "/api/v1/people/students/me/notification-prefs",
+    "guard": "people.student.update",
+    "schema": "`StudentValidation.updateNotificationPrefsZodSchema`",
+    "isPublic": false,
+    "tag": "People"
+  },
+  {
+    "method": "post",
+    "path": "/api/v1/people/students/me/photo",
+    "guard": "people.student.update",
+    "schema": "`StudentValidation.uploadPhotoZodSchema`",
+    "isPublic": false,
+    "tag": "People"
+  },
+  {
+    "method": "patch",
+    "path": "/api/v1/people/students/me/visibility",
+    "guard": "people.student.update",
+    "schema": "`StudentValidation.updateVisibilityZodSchema`",
+    "isPublic": false,
+    "tag": "People"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/people/teachers",
+    "guard": "people.teacher.read",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "People"
+  },
+  {
+    "method": "post",
+    "path": "/api/v1/people/teachers",
+    "guard": "people.teacher.create",
+    "schema": "`TeacherValidation.createZodSchema`",
+    "isPublic": false,
+    "tag": "People"
+  },
+  {
+    "method": "delete",
+    "path": "/api/v1/people/teachers/:id",
+    "guard": "people.teacher.delete",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "People"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/people/teachers/:id",
+    "guard": "people.teacher.read",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "People"
+  },
+  {
+    "method": "patch",
+    "path": "/api/v1/people/teachers/:id",
+    "guard": "people.teacher.update",
+    "schema": "`TeacherValidation.adminUpdateZodSchema`",
+    "isPublic": false,
+    "tag": "People"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/people/teachers/me",
+    "guard": "people.teacher.read",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "People"
+  },
+  {
+    "method": "patch",
+    "path": "/api/v1/people/teachers/me",
+    "guard": "people.teacher.update",
+    "schema": "`TeacherValidation.selfUpdateZodSchema`",
+    "isPublic": false,
+    "tag": "People"
+  },
+  {
+    "method": "patch",
+    "path": "/api/v1/people/teachers/me/notification-prefs",
+    "guard": "people.teacher.update",
+    "schema": "`TeacherValidation.updateNotificationPrefsZodSchema`",
+    "isPublic": false,
+    "tag": "People"
+  },
+  {
+    "method": "post",
+    "path": "/api/v1/people/teachers/me/photo",
+    "guard": "people.teacher.update",
+    "schema": "`TeacherValidation.uploadPhotoZodSchema`",
+    "isPublic": false,
+    "tag": "People"
+  },
+  {
+    "method": "post",
+    "path": "/api/v1/people/teachers/me/qualifications",
+    "guard": "people.teacher.update",
+    "schema": "`TeacherValidation.addQualificationZodSchema`",
+    "isPublic": false,
+    "tag": "People"
+  },
+  {
+    "method": "delete",
+    "path": "/api/v1/people/teachers/me/qualifications/:qualId",
+    "guard": "people.teacher.update",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "People"
+  },
+  {
+    "method": "patch",
+    "path": "/api/v1/people/teachers/me/visibility",
+    "guard": "people.teacher.update",
+    "schema": "`TeacherValidation.updateVisibilityZodSchema`",
+    "isPublic": false,
+    "tag": "People"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/platform-admin/audit-logs",
+    "guard": "platform.admin.read",
+    "schema": "`PlatformAdminValidation.auditLogFilterQueryZodSchema`",
+    "isPublic": false,
+    "tag": "Platform Admin"
+  },
+  {
+    "method": "post",
+    "path": "/api/v1/platform-admin/impersonate/end",
+    "guard": "platform.admin.manage",
+    "schema": "`PlatformAdminValidation.impersonateEndZodSchema`",
+    "isPublic": false,
+    "tag": "Platform Admin"
+  },
+  {
+    "method": "post",
+    "path": "/api/v1/platform-admin/impersonate/start",
+    "guard": "platform.admin.manage",
+    "schema": "`PlatformAdminValidation.impersonateStartZodSchema`",
+    "isPublic": false,
+    "tag": "Platform Admin"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/platform-admin/kpis",
+    "guard": "platform.admin.read",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "Platform Admin"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/platform-admin/payments/failed",
+    "guard": "platform.admin.read",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "Platform Admin"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/platform-admin/renewals/upcoming",
+    "guard": "platform.admin.read",
+    "schema": "`PlatformAdminValidation.upcomingRenewalsQueryZodSchema`",
+    "isPublic": false,
+    "tag": "Platform Admin"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/platform-admin/revenue-trend",
+    "guard": "platform.admin.read",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "Platform Admin"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/platform-admin/tenants",
+    "guard": "platform.admin.read",
+    "schema": "`PlatformAdminValidation.tenantFilterQueryZodSchema`",
+    "isPublic": false,
+    "tag": "Platform Admin"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/platform-admin/tenants/:tenantId",
+    "guard": "platform.admin.read",
+    "schema": "`PlatformAdminValidation.tenantIdParamZodSchema`",
+    "isPublic": false,
+    "tag": "Platform Admin"
+  },
+  {
+    "method": "patch",
+    "path": "/api/v1/platform-admin/tenants/:tenantId/activate",
+    "guard": "platform.admin.manage",
+    "schema": "`PlatformAdminValidation.tenantIdParamZodSchema`",
+    "isPublic": false,
+    "tag": "Platform Admin"
+  },
+  {
+    "method": "patch",
+    "path": "/api/v1/platform-admin/tenants/:tenantId/plan",
+    "guard": "platform.admin.manage",
+    "schema": "`PlatformAdminValidation.changePlanZodSchema`",
+    "isPublic": false,
+    "tag": "Platform Admin"
+  },
+  {
+    "method": "patch",
+    "path": "/api/v1/platform-admin/tenants/:tenantId/suspend",
+    "guard": "platform.admin.manage",
+    "schema": "`PlatformAdminValidation.suspendTenantZodSchema`",
+    "isPublic": false,
+    "tag": "Platform Admin"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/platform-admin/tenants/:tenantId/usage",
+    "guard": "platform.admin.read",
+    "schema": "`PlatformAdminValidation.tenantIdParamZodSchema`",
+    "isPublic": false,
+    "tag": "Platform Admin"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/platform-admin/tenants/top-active",
+    "guard": "platform.admin.read",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "Platform Admin"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/platform/certificates",
+    "guard": "platform.certificate.read",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "Platform"
+  },
+  {
+    "method": "post",
+    "path": "/api/v1/platform/certificates",
+    "guard": "platform.certificate.create",
+    "schema": "`CertificateValidation.createZodSchema`",
+    "isPublic": false,
+    "tag": "Platform"
+  },
+  {
+    "method": "delete",
+    "path": "/api/v1/platform/certificates/:id",
+    "guard": "platform.certificate.delete",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "Platform"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/platform/certificates/:id",
+    "guard": "platform.certificate.read",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "Platform"
+  },
+  {
+    "method": "patch",
+    "path": "/api/v1/platform/certificates/:id",
+    "guard": "platform.certificate.update",
+    "schema": "`CertificateValidation.updateZodSchema`",
+    "isPublic": false,
+    "tag": "Platform"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/platform/files",
+    "guard": "platform.file.read",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "Platform"
+  },
+  {
+    "method": "post",
+    "path": "/api/v1/platform/files",
+    "guard": "platform.file.create",
+    "schema": "`FileValidation.createZodSchema`",
+    "isPublic": false,
+    "tag": "Platform"
+  },
+  {
+    "method": "delete",
+    "path": "/api/v1/platform/files/:id",
+    "guard": "platform.file.delete",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "Platform"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/platform/files/:id",
+    "guard": "platform.file.read",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "Platform"
+  },
+  {
+    "method": "patch",
+    "path": "/api/v1/platform/files/:id",
+    "guard": "platform.file.update",
+    "schema": "`FileValidation.updateZodSchema`",
+    "isPublic": false,
+    "tag": "Platform"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/platform/notices",
+    "guard": "platform.notice.read",
+    "schema": "`NoticeValidation.noticeFilterQueryZodSchema`",
+    "isPublic": false,
+    "tag": "Platform"
+  },
+  {
+    "method": "post",
+    "path": "/api/v1/platform/notices",
+    "guard": "platform.notice.create",
+    "schema": "`NoticeValidation.createZodSchema`",
+    "isPublic": false,
+    "tag": "Platform"
+  },
+  {
+    "method": "delete",
+    "path": "/api/v1/platform/notices/:id",
+    "guard": "platform.notice.delete",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "Platform"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/platform/notices/:id",
+    "guard": "platform.notice.read",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "Platform"
+  },
+  {
+    "method": "patch",
+    "path": "/api/v1/platform/notices/:id",
+    "guard": "platform.notice.update",
+    "schema": "`NoticeValidation.updateZodSchema`",
+    "isPublic": false,
+    "tag": "Platform"
+  },
+  {
+    "method": "post",
+    "path": "/api/v1/platform/notices/:id/pin",
+    "guard": "platform.notice.update",
+    "schema": "`NoticeValidation.pinZodSchema`",
+    "isPublic": false,
+    "tag": "Platform"
+  },
+  {
+    "method": "post",
+    "path": "/api/v1/platform/notices/:id/publish",
+    "guard": "platform.notice.update",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "Platform"
+  },
+  {
+    "method": "post",
+    "path": "/api/v1/platform/notices/:id/read",
+    "guard": "platform.notice.read",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "Platform"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/platform/notices/:id/stats",
+    "guard": "platform.notice.read",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "Platform"
+  },
+  {
+    "method": "post",
+    "path": "/api/v1/platform/notices/:id/unpublish",
+    "guard": "platform.notice.update",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "Platform"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/platform/notices/my",
+    "guard": "platform.notice.read",
+    "schema": "`NoticeValidation.myNoticesQueryZodSchema`",
+    "isPublic": false,
+    "tag": "Platform"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/platform/notices/unread-count",
+    "guard": "platform.notice.read",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "Platform"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/platform/notifications",
+    "guard": "platform.notification.read",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "Platform"
+  },
+  {
+    "method": "post",
+    "path": "/api/v1/platform/notifications",
+    "guard": "platform.notification.create",
+    "schema": "`NotificationValidation.createZodSchema`",
+    "isPublic": false,
+    "tag": "Platform"
+  },
+  {
+    "method": "delete",
+    "path": "/api/v1/platform/notifications/:id",
+    "guard": "platform.notification.delete",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "Platform"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/platform/notifications/:id",
+    "guard": "platform.notification.read",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "Platform"
+  },
+  {
+    "method": "patch",
+    "path": "/api/v1/platform/notifications/:id",
+    "guard": "platform.notification.update",
+    "schema": "`NotificationValidation.updateZodSchema`",
+    "isPublic": false,
+    "tag": "Platform"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/saas/institutes",
+    "guard": "saas.institute.read",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "SaaS"
+  },
+  {
+    "method": "post",
+    "path": "/api/v1/saas/institutes",
+    "guard": "saas.institute.create",
+    "schema": "`InstituteValidation.createZodSchema`",
+    "isPublic": false,
+    "tag": "SaaS"
+  },
+  {
+    "method": "delete",
+    "path": "/api/v1/saas/institutes/:id",
+    "guard": "saas.institute.delete",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "SaaS"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/saas/institutes/:id",
+    "guard": "saas.institute.read",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "SaaS"
+  },
+  {
+    "method": "patch",
+    "path": "/api/v1/saas/institutes/:id",
+    "guard": "saas.institute.update",
+    "schema": "`InstituteValidation.updateZodSchema`",
+    "isPublic": false,
+    "tag": "SaaS"
+  },
+  {
+    "method": "patch",
+    "path": "/api/v1/saas/institutes/:id/settings",
+    "guard": "saas.institute.settings",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "SaaS"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/saas/institutes/:id/stats",
+    "guard": "saas.institute.stats",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "SaaS"
+  },
+  {
+    "method": "post",
+    "path": "/api/v1/saas/institutes/:id/suspend",
+    "guard": "saas.institute.suspend",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "SaaS"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/saas/subscriptions",
+    "guard": "saas.subscription.read",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "SaaS"
+  },
+  {
+    "method": "post",
+    "path": "/api/v1/saas/subscriptions",
+    "guard": "saas.subscription.create",
+    "schema": "`SubscriptionValidation.createZodSchema`",
+    "isPublic": false,
+    "tag": "SaaS"
+  },
+  {
+    "method": "delete",
+    "path": "/api/v1/saas/subscriptions/:id",
+    "guard": "saas.subscription.delete",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "SaaS"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/saas/subscriptions/:id",
+    "guard": "saas.subscription.read",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "SaaS"
+  },
+  {
+    "method": "patch",
+    "path": "/api/v1/saas/subscriptions/:id",
+    "guard": "saas.subscription.update",
+    "schema": "`SubscriptionValidation.updateZodSchema`",
+    "isPublic": false,
+    "tag": "SaaS"
+  },
+  {
+    "method": "post",
+    "path": "/api/v1/settings/2fa/disable",
+    "guard": "settings.user.2fa",
+    "schema": "`SettingsValidation.disable2FAZodSchema`",
+    "isPublic": false,
+    "tag": "Settings"
+  },
+  {
+    "method": "post",
+    "path": "/api/v1/settings/2fa/enable",
+    "guard": "settings.user.2fa",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "Settings"
+  },
+  {
+    "method": "post",
+    "path": "/api/v1/settings/2fa/verify",
+    "guard": "settings.user.2fa",
+    "schema": "`SettingsValidation.verify2FAZodSchema`",
+    "isPublic": false,
+    "tag": "Settings"
+  },
+  {
+    "method": "post",
+    "path": "/api/v1/settings/change-password",
+    "guard": "settings.user.password",
+    "schema": "`SettingsValidation.changePasswordZodSchema`",
+    "isPublic": false,
+    "tag": "Settings"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/settings/institute",
+    "guard": "settings.institute.view",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "Settings"
+  },
+  {
+    "method": "patch",
+    "path": "/api/v1/settings/institute",
+    "guard": "settings.institute.manage",
+    "schema": "`SettingsValidation.updateInstituteSettingsZodSchema`",
+    "isPublic": false,
+    "tag": "Settings"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/settings/institute/:section",
+    "guard": "settings.institute.view",
+    "schema": "`SettingsValidation.instituteSectionParamZodSchema`",
+    "isPublic": false,
+    "tag": "Settings"
+  },
+  {
+    "method": "patch",
+    "path": "/api/v1/settings/institute/:section",
+    "guard": "settings.institute.manage",
+    "schema": "`SettingsValidation.updateInstituteSectionZodSchema`",
+    "isPublic": false,
+    "tag": "Settings"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/settings/me",
+    "guard": "settings.user.view",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "Settings"
+  },
+  {
+    "method": "patch",
+    "path": "/api/v1/settings/me",
+    "guard": "settings.user.update",
+    "schema": "`SettingsValidation.updateMySettingsZodSchema`",
+    "isPublic": false,
+    "tag": "Settings"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/settings/sessions",
+    "guard": "settings.user.sessions",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "Settings"
+  },
+  {
+    "method": "delete",
+    "path": "/api/v1/settings/sessions/:id",
+    "guard": "settings.user.sessions",
+    "schema": "`SettingsValidation.revokeSessionParamZodSchema`",
+    "isPublic": false,
+    "tag": "Settings"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/student-portal",
+    "guard": "student.portal.view",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "Student Portal"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/student-portal/attendance/calendar",
+    "guard": "student.portal.view",
+    "schema": "`StudentPortalValidation.getAttendanceCalendarQueryZodSchema`",
+    "isPublic": false,
+    "tag": "Student Portal"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/student-portal/attendance/history",
+    "guard": "student.portal.view",
+    "schema": "`StudentPortalValidation.getAttendanceHistoryQueryZodSchema`",
+    "isPublic": false,
+    "tag": "Student Portal"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/student-portal/attendance/summary",
+    "guard": "student.portal.view",
+    "schema": "`StudentPortalValidation.getSubjectAttendanceSummaryQueryZodSchema`",
+    "isPublic": false,
+    "tag": "Student Portal"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/student-portal/continue-learning",
+    "guard": "student.portal.view",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "Student Portal"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/student-portal/overdue-items",
+    "guard": "student.portal.view",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "Student Portal"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/student-portal/performance-trend",
+    "guard": "student.portal.view",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "Student Portal"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/student-portal/study-activity",
+    "guard": "student.portal.view",
+    "schema": "`StudentPortalValidation.getStudyActivityQueryZodSchema`",
+    "isPublic": false,
+    "tag": "Student Portal"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/student-portal/subject-progress",
+    "guard": "student.portal.view",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "Student Portal"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/student-portal/today-summary",
+    "guard": "student.portal.view",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "Student Portal"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/student-portal/upcoming-items",
+    "guard": "student.portal.view",
+    "schema": "`StudentPortalValidation.getUpcomingItemsQueryZodSchema`",
+    "isPublic": false,
+    "tag": "Student Portal"
+  },
+  {
+    "method": "post",
+    "path": "/api/v1/support/sessions/:id/cancel",
+    "guard": "support.ticket.view",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "Support System"
+  },
+  {
+    "method": "post",
+    "path": "/api/v1/support/sessions/:id/complete",
+    "guard": "support.session.host",
+    "schema": "`SupportValidation.completeSessionSchema`",
+    "isPublic": false,
+    "tag": "Support System"
+  },
+  {
+    "method": "post",
+    "path": "/api/v1/support/sessions/:id/confirm",
+    "guard": "support.session.host",
+    "schema": "`SupportValidation.confirmSessionSchema`",
+    "isPublic": false,
+    "tag": "Support System"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/support/settings",
+    "guard": "support.settings.manage",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "Support System"
+  },
+  {
+    "method": "patch",
+    "path": "/api/v1/support/settings",
+    "guard": "support.settings.manage",
+    "schema": "`SupportValidation.updateSupportSettingsSchema`",
+    "isPublic": false,
+    "tag": "Support System"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/support/slots/available",
+    "guard": "support.ticket.view",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "Support System"
+  },
+  {
+    "method": "post",
+    "path": "/api/v1/support/slots/book",
+    "guard": "support.ticket.create",
+    "schema": "`SupportValidation.bookSlotSchema`",
+    "isPublic": false,
+    "tag": "Support System"
+  },
+  {
+    "method": "post",
+    "path": "/api/v1/support/slots/publish",
+    "guard": "support.session.host",
+    "schema": "`SupportValidation.publishAvailabilitySchema`",
+    "isPublic": false,
+    "tag": "Support System"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/support/status",
+    "guard": "support.ticket.view",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "Support System"
+  },
+  {
+    "method": "post",
+    "path": "/api/v1/support/tickets",
+    "guard": "support.ticket.create",
+    "schema": "`SupportValidation.createTicketSchema`",
+    "isPublic": false,
+    "tag": "Support System"
+  },
+  {
+    "method": "post",
+    "path": "/api/v1/support/tickets/:id/assign",
+    "guard": "support.ticket.manage",
+    "schema": "`SupportValidation.assignTicketSchema`",
+    "isPublic": false,
+    "tag": "Support System"
+  },
+  {
+    "method": "post",
+    "path": "/api/v1/support/tickets/:id/internal-notes",
+    "guard": "support.ticket.manage",
+    "schema": "`SupportValidation.addInternalNoteSchema`",
+    "isPublic": false,
+    "tag": "Support System"
+  },
+  {
+    "method": "post",
+    "path": "/api/v1/support/tickets/:id/resolve",
+    "guard": "support.ticket.manage",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "Support System"
+  },
+  {
+    "method": "patch",
+    "path": "/api/v1/support/tickets/:id/status",
+    "guard": "support.ticket.manage",
+    "schema": "`SupportValidation.changeTicketStatusSchema`",
+    "isPublic": false,
+    "tag": "Support System"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/support/tickets/my",
+    "guard": "support.ticket.view",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "Support System"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/support/tickets/my/:id",
+    "guard": "support.ticket.view",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "Support System"
+  },
+  {
+    "method": "post",
+    "path": "/api/v1/support/tickets/my/:id/close",
+    "guard": "support.ticket.create",
+    "schema": "None",
+    "isPublic": false,
+    "tag": "Support System"
+  },
+  {
+    "method": "post",
+    "path": "/api/v1/support/tickets/my/:id/messages",
+    "guard": "support.ticket.create",
+    "schema": "`SupportValidation.addMessageSchema`",
+    "isPublic": false,
+    "tag": "Support System"
+  },
+  {
+    "method": "post",
+    "path": "/api/v1/support/tickets/my/:id/rate",
+    "guard": "support.ticket.create",
+    "schema": "`SupportValidation.rateTicketSchema`",
+    "isPublic": false,
+    "tag": "Support System"
+  },
+  {
+    "method": "post",
+    "path": "/api/v1/support/tickets/my/:id/request-session",
+    "guard": "support.ticket.create",
+    "schema": "`SupportValidation.requestLiveSessionSchema`",
+    "isPublic": false,
+    "tag": "Support System"
+  },
+  {
+    "method": "get",
+    "path": "/api/v1/support/tickets/queue",
+    "guard": "support.ticket.manage",
+    "schema": "`SupportValidation.ticketFilterQuerySchema`",
+    "isPublic": false,
+    "tag": "Support System"
+  }
+]
