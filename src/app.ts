@@ -7,6 +7,8 @@ import { errorHandler, notFoundHandler } from "./middleware/error.middleware.js"
 import requestLogger from "./middleware/requestLogger.middleware.js";
 import sanitizeRequest from "./middleware/sanitize.middleware.js";
 import { generalLimiter } from "./middleware/rateLimiter.js";
+import { DocsRouter } from "./docs/openapi/index.js";
+import { HealthRoutes } from "./modules/health/health.route.js";
 
 const app: Application = express();
 const corsOrigins = env.cors_origin || "*";
@@ -34,18 +36,28 @@ app.use(sanitizeRequest);
 // Static uploads folder
 app.use("/uploads", express.static("uploads"));
 
+// Direct Health Check Route
+app.use("/health", HealthRoutes);
+
 // Apply rate limiting on API routes
 app.use("/api/v1", generalLimiter, routes);
+
+// OpenAPI / Swagger UI Documentation
+app.use("/api/docs", DocsRouter);
+app.use("/docs", (req: Request, res: Response) => res.redirect("/api/docs"));
 
 // Root route
 app.get("/", (req: Request, res: Response) => {
   res.status(200).json({
-    name: "Backend Template API",
+    name: "Multi-Tenant Education Platform API",
     status: "online",
     environment: env.node_env,
     uptime: process.uptime().toFixed(2) + " sec",
     timestamp: new Date().toISOString(),
-    documentation: "/api/v1",
+    documentation: "/api/docs",
+    openapi: "/api/docs/openapi.json",
+    api: "/api/v1",
+    health: "/api/v1/health",
   });
 });
 
